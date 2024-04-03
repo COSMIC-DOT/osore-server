@@ -1,0 +1,72 @@
+name: deploy
+
+on:
+  pull_request:
+    branches:
+      - develop
+  push:
+    branches:
+      - develop
+
+jobs:
+  cd:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Make application.yml
+        run: |
+          cd ./src/main/resources
+          touch ./application.yml
+          echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+
+      - name: Make .env
+        run: |
+          touch .env
+          echo "${{ secrets.ENV }}" > .env
+
+      - name: Permisson Settings of ./gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
+      - name: Docker build & push to DockerHub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.DOCKER_REPO }}:latest .
+          docker push ${{ secrets.DOCKER_REPO }}:latest
+
+      - name: Save docker-compose.yml & .env to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true
+        run: |
+          aws s3 cp ./nginx.conf s3://maps-s3-bucket/
+          aws s3 cp docker-compose.yml s3://maps-s3-bucket/
+          aws s3 cp .env s3://maps-s3-bucket/
+
+      - name: Application Run
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_EC2_HOST }}
+          username: ${{ secrets.AWS_EC2_USERNAME }}
+          key: ${{ secrets.AWS_EC2_KEY }}
+          script: |
+            sudo aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+            sudo aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            sudo aws s3 cp s3://maps-s3-bucket/nginx.conf ./conf/nginx.conf
+            sudo aws s3 cp s3://maps-s3-bucket/docker-compose.yml ./docker-compose.yml
+            sudo aws s3 cp s3://maps-s3-bucket/.env ./.env
+            sudo docker-compose -f docker-compose.yml down
+            sudo docker-compose -f docker-compose.yml pull
+            sudo docker image rm ${{ secrets.DOCKER_REPO }}
+            sudo docker-compose -f docker-compose.yml up -d
