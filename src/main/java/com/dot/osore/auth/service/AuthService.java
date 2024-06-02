@@ -27,16 +27,30 @@ public class AuthService {
         throw new Exception();
     }
 
-    public void signIn(List<Cookie> cookies, OAuthPlatform platform) throws Exception {
-        Cookie session = (Cookie) cookies.stream()
+    public Cookie getSession(List<Cookie> cookies) {
+        return (Cookie) cookies.stream()
                 .filter(c -> "JSESSIONID".equals(c.getName()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException());
+    }
+
+    public void signIn(List<Cookie> cookies, OAuthPlatform platform) throws Exception {
+        Cookie session = getSession(cookies);
 
         if (Objects.equals(session, null)) throw new Exception();
         String sessionId = session.getValue();
 
         if (sessions.containsKey(sessionId)) return;
         sessions.put(sessionId, null);
+    }
+
+    public Boolean isExist(List<Cookie> cookies) {
+        Cookie session = getSession(cookies);
+        return sessions.containsKey(session.getValue());
+    }
+
+    public void signOut(List<Cookie> cookies) throws Exception {
+        Cookie session = getSession(cookies);
+        sessions.remove(session.getValue());
     }
 }
