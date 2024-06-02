@@ -20,7 +20,7 @@ public class AuthService {
     public String getOAuthURL(OAuthPlatform platform) throws Exception {
         switch (platform) {
             case GITHUB:
-                return "https://github.com/login/oauth/authorize?client_id=${clientId}";
+                return String.format("https://github.com/login/oauth/authorize?client_id=%s", githubClientId);
             case GOOGLE:
                 return "hello";
         }

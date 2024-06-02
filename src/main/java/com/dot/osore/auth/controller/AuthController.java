@@ -41,8 +41,8 @@ public class AuthController {
     @ResponseStatus(HttpStatus.FOUND)
     public Response githubSignIn(HttpServletRequest request, HttpServletResponse response, @RequestParam String code) {
         try {
-            authService.signIn(List.of(request.getCookies()), OAuthPlatform.GITHUB);
             response.addHeader("Location", clientURL);
+            authService.signIn(List.of(request.getCookies()), OAuthPlatform.GITHUB);
             return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
