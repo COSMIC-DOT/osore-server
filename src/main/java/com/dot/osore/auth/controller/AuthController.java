@@ -26,16 +26,6 @@ public class AuthController {
     @Value("${client.url}")
     private String clientURL;
 
-    @GetMapping("/")
-    @ResponseStatus(HttpStatus.FOUND)
-    public String hello() {
-        try {
-            return "Hello";
-        } catch (Exception e) {
-            return "Bye";
-        }
-    }
-
     @GetMapping("/github")
     @ResponseStatus(HttpStatus.PERMANENT_REDIRECT)
     public Response githubRedirect(HttpServletResponse response) {
@@ -53,6 +43,16 @@ public class AuthController {
         try {
             authService.signIn(List.of(request.getCookies()), OAuthPlatform.GITHUB);
             response.addHeader("Location", clientURL);
+            return Response.success();
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    @GetMapping("/sign-out")
+    public Response signOut(HttpServletRequest request) {
+        try {
+            authService.signOut(List.of(request.getCookies()));
             return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
