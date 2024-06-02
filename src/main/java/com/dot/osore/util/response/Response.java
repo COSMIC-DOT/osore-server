@@ -2,7 +2,9 @@ package com.dot.osore.util.response;
 
 import com.dot.osore.util.constant.ErrorCode;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class Response {
     private Boolean success;
