@@ -26,6 +26,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authHandler)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/api/auth/github", "/api/auth/github/callback");
+                .excludePathPatterns(
+                        "/api/auth/github",
+                        "/api/auth/github/**",
+                        "/api/auth/github/callback",
+                        "/api/auth/github/callback/**"
+                );
     }
 }
