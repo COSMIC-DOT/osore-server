@@ -1,10 +1,10 @@
 package com.dot.osore.auth.controller;
 
 import com.dot.osore.auth.constant.OAuthPlatform;
+import com.dot.osore.auth.manager.SessionManager;
 import com.dot.osore.auth.service.AuthService;
 import com.dot.osore.util.constant.ErrorCode;
 import com.dot.osore.util.response.Response;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final SessionManager sessionManager;
 
     @Value("${client.url}")
     private String clientURL;
@@ -30,7 +31,7 @@ public class AuthController {
     @ResponseStatus(HttpStatus.FOUND)
     public Response githubRedirect(HttpServletResponse response) {
         try {
-            response.addCookie(new Cookie("JSESSIONID", "id"));
+            response.addCookie(sessionManager.createSession());
             response.addHeader("Location", authService.getOAuthURL(OAuthPlatform.GITHUB));
             return Response.success();
         } catch (Exception e) {
