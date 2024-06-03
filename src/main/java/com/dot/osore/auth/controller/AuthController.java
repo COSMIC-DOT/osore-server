@@ -27,9 +27,10 @@ public class AuthController {
     private String clientURL;
 
     @GetMapping("/github")
-    @ResponseStatus(HttpStatus.PERMANENT_REDIRECT)
+    @ResponseStatus(HttpStatus.FOUND)
     public Response githubRedirect(HttpServletResponse response) {
         try {
+            response.addCookie(new Cookie("JSESSIONID", "id"));
             response.addHeader("Location", authService.getOAuthURL(OAuthPlatform.GITHUB));
             return Response.success();
         } catch (Exception e) {

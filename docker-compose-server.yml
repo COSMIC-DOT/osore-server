@@ -15,7 +15,6 @@ services:
       SPRING_DATASOURCE_USERNAME: "${MYSQL_USER}"
       SPRING_DATASOURCE_PASSWORD: "${MYSQL_PASSWORD}"
 
-
   db:
     image: 'mariadb:latest'
     container_name: db
