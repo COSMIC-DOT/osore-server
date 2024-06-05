@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long userId;
 
     @Column(name = "name", nullable = false)
     private String name;

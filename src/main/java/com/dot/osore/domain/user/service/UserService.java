@@ -13,7 +13,7 @@ public class UserService {
 
     public Long save(String name, String avatar) {
         User savedUser = userRepository.save(User.builder().name(name).avatar(avatar).build());
-        return savedUser.getId();
+        return savedUser.getUserId();
     }
 
     public UserResponse findUser(Long id) throws Exception {
