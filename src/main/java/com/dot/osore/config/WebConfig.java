@@ -28,6 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(authHandler)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
+                        "/api/auth/check",
                         "/api/auth/github",
                         "/api/auth/github/**",
                         "/api/auth/github/callback",
