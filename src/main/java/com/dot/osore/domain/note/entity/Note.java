@@ -1,7 +1,7 @@
 package com.dot.osore.domain.note.entity;
 
 import com.dot.osore.domain.note.dto.NoteRequest;
-import com.dot.osore.domain.user.entity.User;
+import com.dot.osore.domain.member.entity.User;
 import com.dot.osore.util.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

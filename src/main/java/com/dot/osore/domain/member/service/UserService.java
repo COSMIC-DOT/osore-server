@@ -1,11 +1,12 @@
-package com.dot.osore.domain.user.service;
+package com.dot.osore.domain.member.service;
 
-import com.dot.osore.domain.user.dto.UserResponse;
-import com.dot.osore.domain.user.entity.User;
-import com.dot.osore.domain.user.repository.UserRepository;
+import com.dot.osore.domain.member.dto.UserResponse;
+import com.dot.osore.domain.member.entity.User;
+import com.dot.osore.domain.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+// TODO: User -> Member 변경 필요
 @Service
 @RequiredArgsConstructor
 public class UserService {

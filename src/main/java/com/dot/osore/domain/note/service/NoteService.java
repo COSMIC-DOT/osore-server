@@ -6,8 +6,8 @@ import com.dot.osore.domain.note.dto.NoteResponse;
 import com.dot.osore.domain.note.dto.NoteListResponse;
 import com.dot.osore.domain.note.entity.Note;
 import com.dot.osore.domain.note.repository.NoteRepository;
-import com.dot.osore.domain.user.entity.User;
-import com.dot.osore.domain.user.repository.UserRepository;
+import com.dot.osore.domain.member.entity.User;
+import com.dot.osore.domain.member.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class NoteService {
         for (GHTag tag : tags) {
             version.add(tag.getName());
         }
-        for (String b: version) System.out.println(b);
+        if (version.isEmpty()) version.add("default");
 
         NoteInfoResponse result = NoteInfoResponse.builder().branch(branch).version(version).build();
         return result;
@@ -69,7 +69,10 @@ public class NoteService {
 
         noteResponse.setAvatar(repo.getOwner().getAvatarUrl());
         noteResponse.setDescription(repo.getDescription());
-        noteResponse.setContributors(List.of(repo.listContributors()).size());
+
+        int contributorsCount = repo.listContributors().toList().size();
+        noteResponse.setContributors(contributorsCount);
+
         noteResponse.setStars(repo.getStargazersCount());
         noteResponse.setForks(repo.getForksCount());
         return noteResponse;

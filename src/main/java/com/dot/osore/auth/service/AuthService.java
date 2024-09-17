@@ -1,7 +1,7 @@
 package com.dot.osore.auth.service;
 
 import com.dot.osore.auth.constant.OAuthPlatform;
-import com.dot.osore.domain.user.service.UserService;
+import com.dot.osore.domain.member.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import java.io.BufferedReader;

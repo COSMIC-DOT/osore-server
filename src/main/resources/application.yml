@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: local
+
+client:
+  url: http://localhost:3000
+  github:
+    id: ${GITHUB_CLIENT_ID}
+    secret: ${GITHUB_CLIENT_SECRET}
+    token: ${GITHUB_TOKEN}

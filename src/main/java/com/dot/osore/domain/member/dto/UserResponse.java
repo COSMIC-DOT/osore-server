@@ -1,9 +1,10 @@
-package com.dot.osore.domain.user.dto;
+package com.dot.osore.domain.member.dto;
 
-import com.dot.osore.domain.user.entity.User;
+import com.dot.osore.domain.member.entity.User;
 import lombok.Builder;
 import lombok.Data;
 
+// TODO: User -> Member 변경 필요
 @Data
 public class UserResponse {
     private String name;
