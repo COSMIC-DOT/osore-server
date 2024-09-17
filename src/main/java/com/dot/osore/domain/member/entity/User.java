@@ -1,4 +1,4 @@
-package com.dot.osore.domain.user.entity;
+package com.dot.osore.domain.member.entity;
 
 import com.dot.osore.util.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -11,10 +11,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+// TODO: User -> Member 변경 필요
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "user")
+@Table(name = "member")
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
