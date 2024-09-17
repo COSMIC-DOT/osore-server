@@ -16,14 +16,25 @@ repositories {
 }
 
 dependencies {
+	// spring
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.kohsuke:github-api:1.321'
-	implementation 'org.projectlombok:lombok'
+
+	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+	// db
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.mysql:mysql-connector-j'
+
+	// github
+	implementation 'org.kohsuke:github-api:1.321'
+
+	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'io.rest-assured:spring-mock-mvc:5.3.2'
 }
 
 tasks.named('test') {
