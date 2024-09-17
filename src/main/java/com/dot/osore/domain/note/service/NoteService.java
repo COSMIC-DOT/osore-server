@@ -50,7 +50,7 @@ public class NoteService {
         for (GHTag tag : tags) {
             version.add(tag.getName());
         }
-        for (String b: version) System.out.println(b);
+        if (version.isEmpty()) version.add("default");
 
         NoteInfoResponse result = NoteInfoResponse.builder().branch(branch).version(version).build();
         return result;
@@ -69,7 +69,10 @@ public class NoteService {
 
         noteResponse.setAvatar(repo.getOwner().getAvatarUrl());
         noteResponse.setDescription(repo.getDescription());
-        noteResponse.setContributors(List.of(repo.listContributors()).size());
+
+        int contributorsCount = repo.listContributors().toList().size();
+        noteResponse.setContributors(contributorsCount);
+
         noteResponse.setStars(repo.getStargazersCount());
         noteResponse.setForks(repo.getForksCount());
         return noteResponse;
