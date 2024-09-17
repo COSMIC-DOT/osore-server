@@ -1,6 +1,6 @@
 spring:
   application:
-    name: lucky-vicky-auction
+    name: osore-server
 
   datasource:
     url: jdbc:h2:mem:testdb
