@@ -1,4 +1,4 @@
-package com.dot.osore.auth.manager;
+package com.dot.osore.domain.auth.manager;
 
 import jakarta.servlet.http.Cookie;
 import java.util.UUID;

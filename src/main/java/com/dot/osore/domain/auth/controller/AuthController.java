@@ -1,8 +1,8 @@
-package com.dot.osore.auth.controller;
+package com.dot.osore.domain.auth.controller;
 
-import com.dot.osore.auth.constant.OAuthPlatform;
-import com.dot.osore.auth.manager.SessionManager;
-import com.dot.osore.auth.service.AuthService;
+import com.dot.osore.domain.auth.constant.OAuthPlatform;
+import com.dot.osore.domain.auth.manager.SessionManager;
+import com.dot.osore.domain.auth.service.AuthService;
 import com.dot.osore.util.constant.ErrorCode;
 import com.dot.osore.util.response.Response;
 import jakarta.servlet.http.Cookie;

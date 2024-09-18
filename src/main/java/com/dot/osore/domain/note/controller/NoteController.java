@@ -1,6 +1,6 @@
 package com.dot.osore.domain.note.controller;
 
-import com.dot.osore.auth.service.AuthService;
+import com.dot.osore.domain.auth.service.AuthService;
 import com.dot.osore.domain.note.dto.NoteInfoResponse;
 import com.dot.osore.domain.note.dto.NoteRequest;
 import com.dot.osore.domain.note.dto.NoteListResponse;

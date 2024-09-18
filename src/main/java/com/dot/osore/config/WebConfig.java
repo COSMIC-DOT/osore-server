@@ -1,6 +1,6 @@
 package com.dot.osore.config;
 
-import com.dot.osore.auth.handler.AuthHandler;
+import com.dot.osore.domain.auth.handler.AuthHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

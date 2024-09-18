@@ -1,6 +1,6 @@
-package com.dot.osore.auth.handler;
+package com.dot.osore.domain.auth.handler;
 
-import com.dot.osore.auth.service.AuthService;
+import com.dot.osore.domain.auth.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

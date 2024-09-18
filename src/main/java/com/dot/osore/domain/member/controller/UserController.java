@@ -1,6 +1,6 @@
 package com.dot.osore.domain.member.controller;
 
-import com.dot.osore.auth.service.AuthService;
+import com.dot.osore.domain.auth.service.AuthService;
 import com.dot.osore.domain.member.dto.UserResponse;
 import com.dot.osore.domain.member.service.UserService;
 import com.dot.osore.util.constant.ErrorCode;

@@ -1,4 +1,4 @@
-package com.dot.osore.auth.constant;
+package com.dot.osore.domain.auth.constant;
 
 public enum OAuthPlatform {
     GITHUB("GITHUB", 0),
