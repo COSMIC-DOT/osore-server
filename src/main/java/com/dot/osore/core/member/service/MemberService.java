@@ -1,6 +1,5 @@
 package com.dot.osore.core.member.service;
 
-import com.dot.osore.core.member.dto.MemberResponse;
 import com.dot.osore.core.member.entity.Member;
 import com.dot.osore.core.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +16,8 @@ public class MemberService {
         return savedMember.getId();
     }
 
-    public MemberResponse findUser(Long id) {
-        Member member = memberRepository.findById(id).orElse(null);
-        return MemberResponse.from(member);
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElse(null);
     }
 
     public Member findByName(String name) {

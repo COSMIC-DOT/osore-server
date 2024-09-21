@@ -7,7 +7,6 @@ import com.dot.osore.core.member.entity.Member;
 import com.dot.osore.core.member.service.MemberService;
 import com.dot.osore.global.constant.ErrorCode;
 import com.dot.osore.global.response.Response;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +22,8 @@ public class MemberController {
     @GetMapping("/member")
     public Response getUserInfo(@Login SignInInfo signInInfo) {
         try {
-            MemberResponse memberResponse = memberService.findUser(signInInfo.id());
-            return Response.success(memberResponse);
+            Member member = memberService.findById(signInInfo.id());
+            return Response.success(MemberResponse.from(member));
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
