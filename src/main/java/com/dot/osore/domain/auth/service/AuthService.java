@@ -38,7 +38,6 @@ public class AuthService {
     public SignInInfo signIn(String name) {
         User user = userService.findByName(name);
         if (user != null) {
-            System.out.println("user.getId() = " + user.getId());
             return new SignInInfo(user.getId());
         }
 
