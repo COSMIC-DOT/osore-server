@@ -1,11 +1,11 @@
 package com.dot.osore.context;
 
-import com.dot.osore.domain.auth.service.AuthService;
-import com.dot.osore.domain.member.repository.UserRepository;
-import com.dot.osore.domain.member.service.UserService;
-import com.dot.osore.domain.note.repository.NoteRepository;
-import com.dot.osore.domain.note.service.NoteService;
-import com.dot.osore.domain.note.service.RepoService;
+import com.dot.osore.core.auth.service.AuthService;
+import com.dot.osore.core.member.repository.MemberRepository;
+import com.dot.osore.core.member.service.MemberService;
+import com.dot.osore.core.note.repository.NoteRepository;
+import com.dot.osore.core.note.service.NoteService;
+import com.dot.osore.core.note.service.RepoService;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,13 +18,13 @@ public abstract class TestContext {
     private DatabaseCleaner databaseCleaner;
 
     @Autowired
-    protected UserRepository userRepository;
+    protected MemberRepository memberRepository;
 
     @Autowired
     protected NoteRepository noteRepository;
 
     @Autowired
-    protected UserService userService;
+    protected MemberService memberService;
 
     @Autowired
     protected AuthService authService;
