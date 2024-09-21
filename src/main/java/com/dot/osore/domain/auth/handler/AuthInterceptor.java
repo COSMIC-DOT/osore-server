@@ -56,7 +56,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         SignInInfo signInInfo = (SignInInfo) attribute;
         authContext.setPrincipal(signInInfo);
-        System.out.println("signInInfo = " + signInInfo.id());
         return true;
     }
 

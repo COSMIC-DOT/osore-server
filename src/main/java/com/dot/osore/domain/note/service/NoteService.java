@@ -1,6 +1,8 @@
 package com.dot.osore.domain.note.service;
 
-import com.dot.osore.domain.note.dto.NoteInfoResponse;
+import static com.dot.osore.util.github.UrlParser.parseRepoName;
+
+import com.dot.osore.domain.note.dto.RepoInfoResponse;
 import com.dot.osore.domain.note.dto.NoteRequest;
 import com.dot.osore.domain.note.dto.NoteResponse;
 import com.dot.osore.domain.note.dto.NoteListResponse;
@@ -28,33 +30,6 @@ public class NoteService {
 
     @Value("${client.github.token}")
     private String token;
-
-    private String parseRepoName(String url) throws Exception {
-        List<String> words = List.of(url.split("/"));
-        if (!"github.com".matches(words.get(2))) throw new Exception();
-        return words.get(3) + "/" + words.get(4);
-    }
-
-    public NoteInfoResponse getNoteInfo(String url) throws Exception {
-        GitHub github = GitHub.connectUsingOAuth(token);
-        GHRepository repo = github.getRepository(parseRepoName(url));
-
-        Map<String, GHBranch> branches = repo.getBranches();
-        List<String> branch = new ArrayList<>();
-        for (Map.Entry<String, GHBranch> entry : branches.entrySet()) {
-            branch.add(entry.getKey());
-        }
-
-        List<String> version = new ArrayList<>();
-        PagedIterable<GHTag> tags = repo.listTags();
-        for (GHTag tag : tags) {
-            version.add(tag.getName());
-        }
-        if (version.isEmpty()) version.add("default");
-
-        NoteInfoResponse result = NoteInfoResponse.builder().branch(branch).version(version).build();
-        return result;
-    }
 
     private NoteResponse getNoteResponse(Note note) throws Exception {
         NoteResponse noteResponse = new NoteResponse();
