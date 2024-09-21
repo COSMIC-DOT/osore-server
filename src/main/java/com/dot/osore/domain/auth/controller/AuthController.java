@@ -1,21 +1,19 @@
 package com.dot.osore.domain.auth.controller;
 
 import com.dot.osore.domain.auth.constant.OAuthPlatform;
-import com.dot.osore.domain.auth.manager.SessionManager;
+import com.dot.osore.domain.auth.dto.SignInInfo;
+import com.dot.osore.domain.auth.handler.Login;
+import com.dot.osore.domain.auth.handler.PublicPath;
 import com.dot.osore.domain.auth.service.AuthService;
 import com.dot.osore.util.constant.ErrorCode;
 import com.dot.osore.util.response.Response;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,52 +21,61 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final SessionManager sessionManager;
 
     @Value("${client.url}")
     private String clientURL;
 
-    @GetMapping("/check")
-    public Response signInCheck(HttpServletRequest request) {
+    @PublicPath
+    @GetMapping("/sign-in")
+    public Response signIn(HttpSession session, @RequestParam String name) {
         try {
-            authService.isExistSession(List.of(request.getCookies()));
+            SignInInfo signInInfo = authService.signIn(name);
+            session.setAttribute("signInInfo", signInInfo);
             return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
     }
 
+    @PublicPath
     @GetMapping("/github")
-    @ResponseStatus(HttpStatus.FOUND)
-    public Response githubRedirect(HttpServletResponse response) {
+    public Response githubRedirect(HttpServletResponse response, HttpSession session) {
         try {
-            Cookie session = sessionManager.createSession();
-            session.setPath("/");
-
-            response.addCookie(session);
-            response.addHeader("Location", authService.getOAuthURL(OAuthPlatform.GITHUB));
+            String oauthURL = authService.getOAuthURL(OAuthPlatform.GITHUB);
+            response.sendRedirect(oauthURL);
             return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
     }
 
+    @PublicPath
     @GetMapping("/github/callback")
-    @ResponseStatus(HttpStatus.FOUND)
-    public Response githubSignIn(HttpServletRequest request, HttpServletResponse response, @RequestParam String code) {
+    public Response githubSignIn(HttpServletResponse response, HttpSession session, @RequestParam String code) {
         try {
-            authService.signIn(code, List.of(request.getCookies()), OAuthPlatform.GITHUB);
-            response.addHeader("Location", clientURL);
+            SignInInfo signInInfo = authService.signInOAuth(code, OAuthPlatform.GITHUB);
+            session.setAttribute("signInInfo", signInInfo);
+            response.sendRedirect(clientURL);
             return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
     }
 
+    @PublicPath
     @GetMapping("/sign-out")
-    public Response signOut(HttpServletRequest request) {
+    public Response signOut(HttpSession session) {
         try {
-            authService.signOut(List.of(request.getCookies()));
+            session.invalidate();
+            return Response.success();
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    @GetMapping("/check")
+    public Response signInCheck(@Login SignInInfo signInInfo) {
+        try {
             return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
