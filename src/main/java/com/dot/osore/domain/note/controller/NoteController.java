@@ -39,10 +39,10 @@ public class NoteController {
     @GetMapping("/notes")
     public Response getNotes(HttpServletRequest request) {
         try {
-            Cookie session = authService.getSession(List.of(request.getCookies()));
-            Long id = authService.getUserId(session);
+//            Cookie session = authService.getSession(List.of(request.getCookies()));
+//            Long id = authService.getUserId(session);
 
-            NoteListResponse response = noteService.findByUserId(id);
+            NoteListResponse response = new NoteListResponse();
             return Response.success(response);
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
@@ -52,10 +52,10 @@ public class NoteController {
     @PostMapping("/note")
     public Response saveNote(HttpServletRequest request, @RequestBody NoteRequest note) {
         try {
-            Cookie session = authService.getSession(List.of(request.getCookies()));
-            Long id = authService.getUserId(session);
+//            Cookie session = authService.getSession(List.of(request.getCookies()));
+//            Long id = authService.getUserId(session);
 
-            noteService.saveNote(id, note);
+//            noteService.saveNote(id, note);
             return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
