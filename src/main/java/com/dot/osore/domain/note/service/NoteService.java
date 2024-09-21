@@ -79,7 +79,7 @@ public class NoteService {
     }
 
     public NoteListResponse findByUserId(Long id) throws Exception {
-        List<Note> notes = noteRepository.findByUser_UserId(id);
+        List<Note> notes = noteRepository.findByUser_Id(id);
         List<NoteResponse> list = new ArrayList<>();
 
         for (Note note: notes) {
