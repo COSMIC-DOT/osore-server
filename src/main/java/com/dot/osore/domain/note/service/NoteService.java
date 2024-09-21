@@ -31,47 +31,60 @@ public class NoteService {
     @Value("${client.github.token}")
     private String token;
 
-    private NoteResponse getNoteResponse(Note note) throws Exception {
-        NoteResponse noteResponse = new NoteResponse();
-        noteResponse.setId(note.getId());
-        noteResponse.setTitle(note.getTitle());
+    /**
+     * 사용자 Id를 통해 노트 정보들을 가져오는 메소드
+     *
+     * @param signInId 사용자 Id
+     */
+    public List<NoteResponse> getNoteList(Long signInId) {
+        List<Note> notes = noteRepository.findByUser_Id(signInId);
+        List<NoteResponse> notesResponse = new ArrayList<>();
+        notes.forEach(note ->
+                notesResponse.add(NoteResponse.createNoteResponse(note)));
+        return notesResponse;
+    }
 
-        String repository = parseRepoName(note.getUrl());
-        noteResponse.setRepository(repository);
+    /**
+     * 노트 정보를 저장하는 메소드
+     *
+     * @param signInId 사용자 Id
+     * @param note 노트 정보
+     */
+    public void saveNote(Long signInId, NoteRequest note) throws Exception {
+        User user = userRepository.findById(signInId).orElse(null);
+        String repository = parseRepoName(note.url());
 
         GitHub github = GitHub.connectUsingOAuth(token);
         GHRepository repo = github.getRepository(repository);
 
-        noteResponse.setAvatar(repo.getOwner().getAvatarUrl());
-        noteResponse.setDescription(repo.getDescription());
+        String avatar = repo.getOwner().getAvatarUrl();
+        String description = repo.getDescription();
+        Integer contributorsCount = repo.listContributors().toList().size();
+        Integer starsCount = repo.getStargazersCount();
+        Integer forksCount = repo.getForksCount();
 
-        int contributorsCount = repo.listContributors().toList().size();
-        noteResponse.setContributors(contributorsCount);
-
-        noteResponse.setStars(repo.getStargazersCount());
-        noteResponse.setForks(repo.getForksCount());
-        return noteResponse;
-    }
-
-    public NoteListResponse findByUserId(Long id) throws Exception {
-        List<Note> notes = noteRepository.findByUser_Id(id);
-        List<NoteResponse> list = new ArrayList<>();
-
-        for (Note note: notes) {
-            NoteResponse noteResponse = getNoteResponse(note);
-            list.add(noteResponse);
-        }
-        NoteListResponse result = NoteListResponse.builder().list(list).build();
-        return result;
-    }
-
-    public void saveNote(Long id, NoteRequest note) throws Exception {
-        User user = userRepository.findById(id).orElse(null);
-        Note savedNote = Note.builder().note(note).user(user).build();
+        Note savedNote = Note.builder()
+                .url(note.url())
+                .title(note.title())
+                .avatar(avatar)
+                .description(description)
+                .contributorsCount(contributorsCount)
+                .starsCount(starsCount)
+                .forksCount(forksCount)
+                .branch(note.branch())
+                .version(note.version())
+                .user(user)
+                .build();
         noteRepository.save(savedNote);
     }
 
-    public void deleteById(Long id) {
-        noteRepository.deleteById(id);
+    /**
+     * 노트 정보를 삭제하는 메소드
+     *
+     * @param signInId 사용자 Id
+     * @param noteId 노트 Id
+     */
+    public void deleteNote(Long signInId, Long noteId) {
+        noteRepository.deleteById(noteId);
     }
 }

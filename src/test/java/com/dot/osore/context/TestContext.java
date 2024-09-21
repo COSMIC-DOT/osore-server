@@ -3,6 +3,8 @@ package com.dot.osore.context;
 import com.dot.osore.domain.auth.service.AuthService;
 import com.dot.osore.domain.member.repository.UserRepository;
 import com.dot.osore.domain.member.service.UserService;
+import com.dot.osore.domain.note.repository.NoteRepository;
+import com.dot.osore.domain.note.service.NoteService;
 import com.dot.osore.domain.note.service.RepoService;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public abstract class TestContext {
     protected UserRepository userRepository;
 
     @Autowired
+    protected NoteRepository noteRepository;
+
+    @Autowired
     protected UserService userService;
 
     @Autowired
@@ -26,6 +31,9 @@ public abstract class TestContext {
 
     @Autowired
     protected RepoService repoService;
+
+    @Autowired
+    protected NoteService noteService;
 
     @AfterEach
     void tearDown() {

@@ -1,17 +1,28 @@
 package com.dot.osore.domain.note.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.dot.osore.domain.note.entity.Note;
 
-@Data
-@NoArgsConstructor
-public class NoteResponse {
-    Long id;
-    String title;
-    String avatar;
-    String repository;
-    String description;
-    int contributors;
-    int stars;
-    int forks;
+public record NoteResponse(
+        Long id,
+        String title,
+        String avatar,
+        String repository,
+        String description,
+        Integer contributorsCount,
+        Integer starsCount,
+        Integer forksCount
+) {
+
+    public static NoteResponse createNoteResponse(Note note) {
+        return new NoteResponse(
+                note.getId(),
+                note.getTitle(),
+                note.getAvatar(),
+                note.getUrl(),
+                note.getDescription(),
+                note.getContributorsCount(),
+                note.getStarsCount(),
+                note.getForksCount()
+        );
+    }
 }
