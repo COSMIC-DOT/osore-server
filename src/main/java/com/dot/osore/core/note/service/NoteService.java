@@ -2,12 +2,12 @@ package com.dot.osore.core.note.service;
 
 import static com.dot.osore.global.github.UrlParser.parseRepoName;
 
+import com.dot.osore.core.member.service.MemberService;
 import com.dot.osore.core.note.dto.NoteRequest;
 import com.dot.osore.core.note.dto.NoteResponse;
 import com.dot.osore.core.note.entity.Note;
 import com.dot.osore.core.note.repository.NoteRepository;
 import com.dot.osore.core.member.entity.Member;
-import com.dot.osore.core.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class NoteService {
-    final private MemberRepository memberRepository;
-    final private NoteRepository noteRepository;
+
+    private final MemberService memberService;
+    private final NoteRepository noteRepository;
 
     @Value("${client.github.token}")
     private String token;
@@ -45,7 +46,7 @@ public class NoteService {
      * @param note 노트 정보
      */
     public void saveNote(Long signInId, NoteRequest note) throws Exception {
-        Member member = memberRepository.findById(signInId).orElse(null);
+        Member member = memberService.findById(signInId);
         String repository = parseRepoName(note.url());
 
         GitHub github = GitHub.connectUsingOAuth(token);
