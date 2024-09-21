@@ -1,11 +1,12 @@
 package com.dot.osore.domain.note.controller;
 
-import com.dot.osore.domain.note.dto.NoteRequest;
+import com.dot.osore.domain.auth.dto.SignInInfo;
+import com.dot.osore.domain.auth.handler.Login;
 import com.dot.osore.domain.note.dto.NoteListResponse;
+import com.dot.osore.domain.note.dto.NoteRequest;
 import com.dot.osore.domain.note.service.NoteService;
 import com.dot.osore.util.constant.ErrorCode;
 import com.dot.osore.util.response.Response;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +23,9 @@ public class NoteController {
     final private NoteService noteService;
 
     @GetMapping("/notes")
-    public Response getNotes(HttpServletRequest request) {
+    public Response getNoteList(@Login SignInInfo signInInfo) {
         try {
-//            Cookie session = authService.getSession(List.of(request.getCookies()));
-//            Long id = authService.getUserId(session);
-
-            NoteListResponse response = new NoteListResponse();
+            NoteListResponse response = new NoteListResponse(noteService.getNoteList(signInInfo.id()));
             return Response.success(response);
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
@@ -35,12 +33,9 @@ public class NoteController {
     }
 
     @PostMapping("/note")
-    public Response saveNote(HttpServletRequest request, @RequestBody NoteRequest note) {
+    public Response saveNote(@RequestBody NoteRequest note, @Login SignInInfo signInInfo) {
         try {
-//            Cookie session = authService.getSession(List.of(request.getCookies()));
-//            Long id = authService.getUserId(session);
-
-//            noteService.saveNote(id, note);
+            noteService.saveNote(signInInfo.id(), note);
             return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
@@ -48,9 +43,9 @@ public class NoteController {
     }
 
     @DeleteMapping("/note")
-    public Response deleteNote(HttpServletRequest request, @RequestParam Long id) {
+    public Response deleteNote(@RequestParam Long id, @Login SignInInfo signInInfo) {
         try {
-            noteService.deleteById(id);
+            noteService.deleteNote(signInInfo.id(), id);
             return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
