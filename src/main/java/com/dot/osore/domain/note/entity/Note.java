@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "note")
 public class Note extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "url")
@@ -30,6 +30,21 @@ public class Note extends BaseEntity {
 
     @Column(name = "title")
     private String title;
+
+    @Column(name = "avatar")
+    private String avatar;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "contributorsCount")
+    private Integer contributorsCount;
+
+    @Column(name = "starsCount")
+    private Integer starsCount;
+
+    @Column(name = "forksCount")
+    private Integer forksCount;
 
     @Column(name = "branch")
     private String branch;
@@ -42,11 +57,17 @@ public class Note extends BaseEntity {
     private User user;
 
     @Builder
-    public Note(NoteRequest note, User user) {
-        this.url = note.getUrl();
-        this.title = note.getTitle();
-        this.branch = note.getBranch();
-        this.version = note.getVersion();
+    public Note(String url, String title, String avatar, String description, Integer contributorsCount,
+                Integer starsCount, Integer forksCount, String branch, String version, User user) {
+        this.url = url;
+        this.title = title;
+        this.avatar = avatar;
+        this.description = description;
+        this.contributorsCount = contributorsCount;
+        this.starsCount = starsCount;
+        this.forksCount = forksCount;
+        this.branch = branch;
+        this.version = version;
         this.user = user;
     }
 }
