@@ -1,5 +1,6 @@
-package com.dot.osore.domain.auth.controller;
+package com.dot.osore.domain.auth.handler;
 
+import com.dot.osore.domain.auth.dto.AuthContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 @RequiredArgsConstructor
-public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
+public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private final AuthContext authContext;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -19,6 +22,6 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        return null;
+        return authContext.getPrincipal();
     }
 }
