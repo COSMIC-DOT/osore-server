@@ -35,7 +35,7 @@ class NoteServiceTest extends TestContext {
                     .forksCount(1)
                     .branch("test1")
                     .version("test1")
-                    .user(savedMember)
+                    .member(savedMember)
                     .build();
 
             Note testNote2 = Note.builder()
@@ -48,7 +48,7 @@ class NoteServiceTest extends TestContext {
                     .forksCount(2)
                     .branch("test2")
                     .version("test2")
-                    .user(savedMember)
+                    .member(savedMember)
                     .build();
             noteRepository.save(testNote1);
             noteRepository.save(testNote2);
@@ -114,7 +114,7 @@ class NoteServiceTest extends TestContext {
                     .forksCount(1)
                     .branch("test1")
                     .version("test1")
-                    .user(savedMember)
+                    .member(savedMember)
                     .build();
             Note savedNote = noteRepository.save(testNote1);
 
