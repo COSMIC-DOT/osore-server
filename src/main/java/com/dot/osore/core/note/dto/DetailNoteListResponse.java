@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class NoteListResponse {
-    List<NoteResponse> list;
+public class DetailNoteListResponse {
+    List<DetailNoteResponse> list;
 
     @Builder
-    public NoteListResponse(List<NoteResponse> list) {
+    public DetailNoteListResponse(List<DetailNoteResponse> list) {
         this.list = list;
     }
 }

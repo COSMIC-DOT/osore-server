@@ -2,8 +2,9 @@ package com.dot.osore.core.note.controller;
 
 import com.dot.osore.core.auth.dto.SignInInfo;
 import com.dot.osore.core.auth.handler.Login;
-import com.dot.osore.core.note.dto.NoteListResponse;
+import com.dot.osore.core.note.dto.DetailNoteListResponse;
 import com.dot.osore.core.note.dto.NoteRequest;
+import com.dot.osore.core.note.dto.SimpleNoteResponse;
 import com.dot.osore.core.note.service.NoteService;
 import com.dot.osore.global.constant.ErrorCode;
 import com.dot.osore.global.response.Response;
@@ -26,8 +27,17 @@ public class NoteController {
     @GetMapping("/notes")
     public Response getNoteList(@Login SignInInfo signInInfo) {
         try {
-            NoteListResponse response = new NoteListResponse(noteService.getNoteList(signInInfo.id()));
+            DetailNoteListResponse response = new DetailNoteListResponse(noteService.getNoteList(signInInfo.id()));
             return Response.success(response);
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    @GetMapping("/note")
+    public Response getNote(@RequestParam Long noteId, @Login SignInInfo signInInfo) {
+        try {
+            return Response.success(noteService.getNote(noteId));
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }

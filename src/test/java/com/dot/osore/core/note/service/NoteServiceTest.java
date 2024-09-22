@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.dot.osore.context.TestContext;
 import com.dot.osore.core.member.entity.Member;
 import com.dot.osore.core.note.dto.NoteRequest;
-import com.dot.osore.core.note.dto.NoteResponse;
+import com.dot.osore.core.note.dto.DetailNoteResponse;
 import com.dot.osore.core.note.entity.Note;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -54,7 +54,7 @@ class NoteServiceTest extends TestContext {
             noteRepository.save(testNote2);
 
             // when
-            List<NoteResponse> noteList = noteService.getNoteList(savedMember.getId());
+            List<DetailNoteResponse> noteList = noteService.getNoteList(savedMember.getId());
 
             // then
             assertEquals(2, noteList.size());
