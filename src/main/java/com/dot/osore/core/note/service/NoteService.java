@@ -6,7 +6,8 @@ import com.dot.osore.core.file.service.FileService;
 import com.dot.osore.core.member.entity.Member;
 import com.dot.osore.core.member.service.MemberService;
 import com.dot.osore.core.note.dto.NoteRequest;
-import com.dot.osore.core.note.dto.NoteResponse;
+import com.dot.osore.core.note.dto.DetailNoteResponse;
+import com.dot.osore.core.note.dto.SimpleNoteResponse;
 import com.dot.osore.core.note.entity.Note;
 import com.dot.osore.core.note.repository.NoteRepository;
 import java.util.ArrayList;
@@ -33,12 +34,23 @@ public class NoteService {
      *
      * @param signInId 사용자 Id
      */
-    public List<NoteResponse> getNoteList(Long signInId) {
+    public List<DetailNoteResponse> getNoteList(Long signInId) {
         List<Note> notes = noteRepository.findByMember_Id(signInId);
-        List<NoteResponse> notesResponse = new ArrayList<>();
+        List<DetailNoteResponse> notesResponse = new ArrayList<>();
         notes.forEach(note ->
-                notesResponse.add(NoteResponse.from(note)));
+                notesResponse.add(DetailNoteResponse.from(note)));
         return notesResponse;
+    }
+
+    /**
+     * 노트 정보를 가져오는 메소드
+     *
+     * @param noteId 노트 Id
+     */
+    public SimpleNoteResponse getNote(Long noteId) throws Exception {
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 노트를 찾을 수 없습니다."));
+        return SimpleNoteResponse.from(note);
     }
 
     /**
