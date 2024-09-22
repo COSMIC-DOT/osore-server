@@ -2,7 +2,7 @@ package com.dot.osore.core.note.dto;
 
 import com.dot.osore.core.note.entity.Note;
 
-public record NoteResponse(
+public record DetailNoteResponse(
         Long id,
         String title,
         String avatar,
@@ -13,8 +13,8 @@ public record NoteResponse(
         Integer forksCount
 ) {
 
-    public static NoteResponse from(Note note) {
-        return new NoteResponse(
+    public static DetailNoteResponse from(Note note) {
+        return new DetailNoteResponse(
                 note.getId(),
                 note.getTitle(),
                 note.getAvatar(),
