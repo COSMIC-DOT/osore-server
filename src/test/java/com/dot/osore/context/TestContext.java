@@ -1,11 +1,13 @@
 package com.dot.osore.context;
 
 import com.dot.osore.core.auth.service.AuthService;
+import com.dot.osore.core.file.repository.FileRepository;
 import com.dot.osore.core.member.repository.MemberRepository;
 import com.dot.osore.core.member.service.MemberService;
 import com.dot.osore.core.note.repository.NoteRepository;
 import com.dot.osore.core.note.service.NoteService;
 import com.dot.osore.core.note.service.RepoService;
+import com.dot.osore.core.file.service.FileService;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +26,9 @@ public abstract class TestContext {
     protected NoteRepository noteRepository;
 
     @Autowired
+    protected FileRepository fileRepository;
+
+    @Autowired
     protected MemberService memberService;
 
     @Autowired
@@ -34,6 +39,9 @@ public abstract class TestContext {
 
     @Autowired
     protected NoteService noteService;
+
+    @Autowired
+    protected FileService fileService;
 
     @AfterEach
     void tearDown() {
