@@ -2,10 +2,12 @@ package com.dot.osore.core.file.service;
 
 import static com.dot.osore.global.parser.GithubParser.parseRepoName;
 
+import com.dot.osore.core.file.dto.FileInfoResponse;
 import com.dot.osore.core.file.entity.File;
 import com.dot.osore.core.file.repository.FileRepository;
 import com.dot.osore.core.note.entity.Note;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kohsuke.github.GHContent;
@@ -42,16 +44,43 @@ public class FileService {
         for (GHContent content : contents) {
             if (content.isFile()) {
                 String fileContent = content.getContent();
-                System.out.println(content.getPath());
-                saveFileToDatabase(content.getPath(), fileContent, note);
+                File file = new File(content.getPath(), fileContent, note);
+                fileRepository.save(file);
             } else if (content.isDirectory()) {
                 fetchFilesFromDirectory(repo, content.getPath(), branch, note);
             }
         }
     }
 
-    private void saveFileToDatabase(String path, String content, Note note) {
-        File file = new File(path, content, note);
-        fileRepository.save(file);
+    /**
+     * 노트에 저장된 파일 정보를 가져와 프론트에 필요한 양식대로 반환하는 메서드
+     *
+     * @param noteId 노트 ID
+     */
+    public FileInfoResponse getFileInfoList(Long noteId) {
+        List<File> files = fileRepository.findByNote_Id(noteId);
+        FileInfoResponse root = new FileInfoResponse("folder", "root", null, new ArrayList<>());
+
+        for (File file : files) {
+            String path = file.getPath();
+            String[] parts = path.split("/");
+            FileInfoResponse current = root;
+
+            for (int i = 0; i < parts.length; i++) {
+                String part = parts[i];
+                boolean isFile = part.contains(".");
+                String fileName = isFile ? part.substring(0, part.lastIndexOf(".")) : part;
+                String extension = isFile ? part.substring(part.lastIndexOf(".") + 1) : null;
+
+                FileInfoResponse child = current.findChildByName(fileName);
+                if (child == null) {
+                    child = new FileInfoResponse(isFile ? "file" : "folder", fileName, extension, new ArrayList<>());
+                    current.children().add(child);
+                }
+                current = child;
+            }
+        }
+
+        return root;
     }
 }

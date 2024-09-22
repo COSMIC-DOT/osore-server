@@ -3,6 +3,7 @@ package com.dot.osore.core.file.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.dot.osore.context.TestContext;
+import com.dot.osore.core.file.dto.FileInfoResponse;
 import com.dot.osore.core.file.entity.File;
 import com.dot.osore.core.member.entity.Member;
 import com.dot.osore.core.note.entity.Note;
@@ -46,6 +47,48 @@ class FileServiceTest extends TestContext {
 
             // then
             assertEquals(1, files.size());
+        }
+    }
+
+    @Nested
+    class getFileInfoList_메서드는 {
+
+        @Test
+        void 주어진_노트_ID에_해당하는_파일_정보를_가져온다() {
+            // given
+            Member member = Member.builder()
+                    .name("test")
+                    .avatar("test")
+                    .build();
+            Member savedMember = memberRepository.save(member);
+            Note note = Note.builder()
+                    .url("test1")
+                    .title("test1")
+                    .avatar("test1")
+                    .description("test1")
+                    .contributorsCount(1)
+                    .starsCount(1)
+                    .forksCount(1)
+                    .branch("test1")
+                    .version("test1")
+                    .member(savedMember)
+                    .build();
+            Note savedNote = noteRepository.save(note);
+
+            File file = File.builder()
+                    .path("src/Main.java")
+                    .content("test1")
+                    .note(savedNote)
+                    .build();
+            fileRepository.save(file);
+
+            // when
+            FileInfoResponse fileInfoResponse = fileService.getFileInfoList(1L);
+
+            // then=
+            assertEquals("folder", fileInfoResponse.type());
+            assertEquals("root", fileInfoResponse.name());
+            assertEquals(1, fileInfoResponse.children().size());
         }
     }
 }

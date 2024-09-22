@@ -10,9 +10,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @Table(name = "file")
 public class File {
@@ -31,6 +34,7 @@ public class File {
     @JoinColumn(name = "note_id")
     private Note note;
 
+    @Builder
     public File(String path, String content, Note note) {
         this.path = path;
         this.content = content;
