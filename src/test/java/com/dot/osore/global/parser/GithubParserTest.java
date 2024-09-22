@@ -1,11 +1,12 @@
-package com.dot.osore.global.github;
+package com.dot.osore.global.parser;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class UrlParserTest {
+class GithubParserTest {
 
     @Nested
     class parseRepoName_메소드는 {
@@ -16,7 +17,7 @@ class UrlParserTest {
             String url = "https://github.com/COSMIC-DOT/osore-server";
 
             // when
-            String repoName = UrlParser.parseRepoName(url);
+            String repoName = GithubParser.parseRepoName(url);
 
             // then
             assertEquals("COSMIC-DOT/osore-server", repoName);
@@ -28,7 +29,7 @@ class UrlParserTest {
             String url = "";
 
             // expect
-            assertThrows(Exception.class, () -> UrlParser.parseRepoName(url));
+            assertThrows(Exception.class, () -> GithubParser.parseRepoName(url));
         }
     }
 }

@@ -74,7 +74,7 @@ class NoteServiceTest extends TestContext {
             Member savedMember = memberRepository.save(member);
 
             String url = "https://github.com/woowa-techcamp-2024/Team7-ELEVEN";
-            NoteRequest noteRequest = new NoteRequest(url, "test", "test", "test");
+            NoteRequest noteRequest = new NoteRequest(url, "test", "main", "default");
 
             // when
             noteService.saveNote(savedMember.getId(), noteRequest);
@@ -86,8 +86,8 @@ class NoteServiceTest extends TestContext {
                     () -> assertEquals(4, note.getContributorsCount()),
                     () -> assertEquals(7, note.getStarsCount()),
                     () -> assertEquals(3, note.getForksCount()),
-                    () -> assertEquals("test", note.getBranch()),
-                    () -> assertEquals("test", note.getVersion())
+                    () -> assertEquals("main", note.getBranch()),
+                    () -> assertEquals("default", note.getVersion())
             );
         }
     }
