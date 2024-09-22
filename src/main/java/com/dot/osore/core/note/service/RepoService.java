@@ -1,6 +1,6 @@
 package com.dot.osore.core.note.service;
 
-import static com.dot.osore.global.github.UrlParser.parseRepoName;
+import static com.dot.osore.global.parser.GithubParser.parseRepoName;
 
 import com.dot.osore.core.note.dto.RepoInfoResponse;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class RepoService {
 
     @Value("${client.github.token}")
-    private String token;
+    public String token;
 
     /**
      * 깃허브 저장소 URL을 받아 브랜치와 버전을 반환하는 메서드

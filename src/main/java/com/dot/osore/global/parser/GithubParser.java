@@ -1,8 +1,8 @@
-package com.dot.osore.global.github;
+package com.dot.osore.global.parser;
 
 import java.util.List;
 
-public class UrlParser {
+public class GithubParser {
 
     public static String parseRepoName(String url) throws Exception {
         List<String> words = List.of(url.split("/"));
