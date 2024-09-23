@@ -7,8 +7,8 @@ import com.dot.osore.core.file.entity.File;
 import com.dot.osore.core.file.repository.FileRepository;
 import com.dot.osore.core.note.entity.Note;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 import lombok.RequiredArgsConstructor;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
@@ -59,7 +59,7 @@ public class FileService {
      */
     public FileInfoResponse getFileInfoList(Long noteId) {
         List<File> files = fileRepository.findByNote_Id(noteId);
-        FileInfoResponse root = new FileInfoResponse("folder", "root", null, new ArrayList<>());
+        FileInfoResponse root = new FileInfoResponse("folder", "root", null, new TreeSet<>());
 
         for (File file : files) {
             String path = file.getPath();
@@ -74,7 +74,7 @@ public class FileService {
 
                 FileInfoResponse child = current.findChildByName(fileName);
                 if (child == null) {
-                    child = new FileInfoResponse(isFile ? "file" : "folder", fileName, extension, new ArrayList<>());
+                    child = new FileInfoResponse(isFile ? "file" : "folder", fileName, extension, new TreeSet<>());
                     current.children().add(child);
                 }
                 current = child;
