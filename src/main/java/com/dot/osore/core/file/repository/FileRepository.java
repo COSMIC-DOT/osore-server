@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FileRepository extends JpaRepository<File, Long> {
     List<File> findByNote_Id(Long id);
+    void deleteByNote_Id(Long id);
 }

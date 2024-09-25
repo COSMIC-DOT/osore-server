@@ -119,7 +119,7 @@ class NoteServiceTest extends TestContext {
             Note savedNote = noteRepository.save(testNote1);
 
             // when
-            noteService.deleteNote(savedMember.getId(), savedNote.getId());
+            noteService.deleteNote(savedNote.getId());
 
             // then
             assertFalse(noteRepository.findById(savedNote.getId()).isPresent());
