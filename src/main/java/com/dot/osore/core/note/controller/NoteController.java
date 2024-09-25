@@ -47,7 +47,8 @@ public class NoteController {
     public Response saveNote(@RequestBody NoteRequest note, @Login SignInInfo signInInfo) {
         try {
             noteService.saveNote(signInInfo.id(), note);
-            return Response.success();
+            DetailNoteListResponse response = new DetailNoteListResponse(noteService.getNoteList(signInInfo.id()));
+            return Response.success(response);
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
@@ -56,9 +57,11 @@ public class NoteController {
     @DeleteMapping("/note")
     public Response deleteNote(@RequestParam Long id, @Login SignInInfo signInInfo) {
         try {
-            noteService.deleteNote(signInInfo.id(), id);
-            return Response.success();
+            noteService.deleteNote(id);
+            DetailNoteListResponse response = new DetailNoteListResponse(noteService.getNoteList(signInInfo.id()));
+            return Response.success(response);
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
     }
