@@ -9,6 +9,8 @@ import com.dot.osore.core.note.entity.Note;
 import java.io.IOException;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import lombok.RequiredArgsConstructor;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class FileService {
 
     private final FileRepository fileRepository;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     @Value("${client.github.token}")
     private String token;
@@ -47,7 +50,13 @@ public class FileService {
                 File file = new File(content.getPath(), fileContent, note);
                 fileRepository.save(file);
             } else if (content.isDirectory()) {
-                fetchFilesFromDirectory(repo, content.getPath(), branch, note);
+                executorService.execute(() -> {
+                    try {
+                        fetchFilesFromDirectory(repo, content.getPath(), branch, note);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }
     }
@@ -82,5 +91,14 @@ public class FileService {
         }
 
         return root;
+    }
+
+    /**
+     * 노트에 저장된 파일 정보를 삭제하는 메서드
+     *
+     * @param noteId 노트 ID
+     */
+    public void deleteByNoteId(Long noteId) {
+        fileRepository.deleteByNote_Id(noteId);
     }
 }
