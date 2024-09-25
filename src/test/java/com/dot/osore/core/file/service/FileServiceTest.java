@@ -90,5 +90,56 @@ class FileServiceTest extends TestContext {
             assertEquals("root", fileInfoResponse.name());
             assertEquals(1, fileInfoResponse.children().size());
         }
+
+        @Test
+        void 주어진_노트_ID에_해당하는_파일_정보는_정렬되어_가져온다() {
+            // given
+            Member member = Member.builder()
+                    .name("test")
+                    .avatar("test")
+                    .build();
+            Member savedMember = memberRepository.save(member);
+            Note note = Note.builder()
+                    .url("test1")
+                    .title("test1")
+                    .avatar("test1")
+                    .description("test1")
+                    .contributorsCount(1)
+                    .starsCount(1)
+                    .forksCount(1)
+                    .branch("test1")
+                    .version("test1")
+                    .member(savedMember)
+                    .build();
+            Note savedNote = noteRepository.save(note);
+
+            File file1 = File.builder()
+                    .path("src/Main.java")
+                    .content("test1")
+                    .note(savedNote)
+                    .build();
+            fileRepository.save(file1);
+
+            File file2 = File.builder()
+                    .path("src/File.java")
+                    .content("test1")
+                    .note(savedNote)
+                    .build();
+            fileRepository.save(file2);
+
+            File file3 = File.builder()
+                    .path("README.md")
+                    .content("test1")
+                    .note(savedNote)
+                    .build();
+            fileRepository.save(file3);
+
+            // when
+            FileInfoResponse fileInfoResponse = fileService.getFileInfoList(1L);
+
+            // then
+            assertEquals("src", fileInfoResponse.children().first().name());
+            assertEquals("README", fileInfoResponse.children().last().name());
+        }
     }
 }

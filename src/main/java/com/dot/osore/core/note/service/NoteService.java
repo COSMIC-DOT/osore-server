@@ -10,6 +10,7 @@ import com.dot.osore.core.note.dto.DetailNoteResponse;
 import com.dot.osore.core.note.dto.SimpleNoteResponse;
 import com.dot.osore.core.note.entity.Note;
 import com.dot.osore.core.note.repository.NoteRepository;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -90,10 +91,14 @@ public class NoteService {
     /**
      * 노트 정보를 삭제하는 메소드
      *
-     * @param signInId 사용자 Id
      * @param noteId   노트 Id
      */
-    public void deleteNote(Long signInId, Long noteId) {
+    @Transactional
+    public void deleteNote(Long noteId) {
+        System.out.println("noteId = " + noteId);
+        fileService.deleteByNoteId(noteId);
+        System.out.println("noteId = " + noteId);
         noteRepository.deleteById(noteId);
+        System.out.println("noteId = " + noteId);
     }
 }
