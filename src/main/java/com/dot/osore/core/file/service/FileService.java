@@ -2,7 +2,8 @@ package com.dot.osore.core.file.service;
 
 import static com.dot.osore.global.parser.GithubParser.parseRepoName;
 
-import com.dot.osore.core.file.dto.FileInfoResponse;
+import com.dot.osore.core.file.dto.DetailFileInfoResponse;
+import com.dot.osore.core.file.dto.SimpleFileInfoResponse;
 import com.dot.osore.core.file.entity.File;
 import com.dot.osore.core.file.repository.FileRepository;
 import com.dot.osore.core.note.entity.Note;
@@ -66,14 +67,14 @@ public class FileService {
      *
      * @param noteId 노트 ID
      */
-    public FileInfoResponse getFileInfoList(Long noteId) {
+    public SimpleFileInfoResponse getSimpleFileInfoList(Long noteId) {
         List<File> files = fileRepository.findByNote_Id(noteId);
-        FileInfoResponse root = new FileInfoResponse("folder", "root", null, new TreeSet<>());
+        SimpleFileInfoResponse root = new SimpleFileInfoResponse("folder", "root", null, new TreeSet<>());
 
         for (File file : files) {
             String path = file.getPath();
             String[] parts = path.split("/");
-            FileInfoResponse current = root;
+            SimpleFileInfoResponse current = root;
 
             for (int i = 0; i < parts.length; i++) {
                 String part = parts[i];
@@ -81,9 +82,9 @@ public class FileService {
                 String fileName = isFile ? part.substring(0, part.lastIndexOf(".")) : part;
                 String extension = isFile ? part.substring(part.lastIndexOf(".") + 1) : null;
 
-                FileInfoResponse child = current.findChildByName(fileName);
+                SimpleFileInfoResponse child = current.findChildByName(fileName);
                 if (child == null) {
-                    child = new FileInfoResponse(isFile ? "file" : "folder", fileName, extension, new TreeSet<>());
+                    child = new SimpleFileInfoResponse(isFile ? "file" : "folder", fileName, extension, new TreeSet<>());
                     current.children().add(child);
                 }
                 current = child;
@@ -91,6 +92,11 @@ public class FileService {
         }
 
         return root;
+    }
+
+    public DetailFileInfoResponse getDetailFileInfo(Long noteId, String filePath) {
+        File file = fileRepository.findByNote_IdAndPath(noteId, filePath);
+        return DetailFileInfoResponse.from(file);
     }
 
     /**
