@@ -3,7 +3,7 @@ package com.dot.osore.core.file.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.dot.osore.context.TestContext;
-import com.dot.osore.core.file.dto.FileInfoResponse;
+import com.dot.osore.core.file.dto.SimpleFileInfoResponse;
 import com.dot.osore.core.file.entity.File;
 import com.dot.osore.core.member.entity.Member;
 import com.dot.osore.core.note.entity.Note;
@@ -83,12 +83,12 @@ class FileServiceTest extends TestContext {
             fileRepository.save(file);
 
             // when
-            FileInfoResponse fileInfoResponse = fileService.getFileInfoList(1L);
+            SimpleFileInfoResponse simpleFileInfoResponse = fileService.getSimpleFileInfoList(1L);
 
             // then=
-            assertEquals("folder", fileInfoResponse.type());
-            assertEquals("root", fileInfoResponse.name());
-            assertEquals(1, fileInfoResponse.children().size());
+            assertEquals("folder", simpleFileInfoResponse.type());
+            assertEquals("root", simpleFileInfoResponse.name());
+            assertEquals(1, simpleFileInfoResponse.children().size());
         }
 
         @Test
@@ -135,11 +135,11 @@ class FileServiceTest extends TestContext {
             fileRepository.save(file3);
 
             // when
-            FileInfoResponse fileInfoResponse = fileService.getFileInfoList(1L);
+            SimpleFileInfoResponse simpleFileInfoResponse = fileService.getSimpleFileInfoList(1L);
 
             // then
-            assertEquals("src", fileInfoResponse.children().first().name());
-            assertEquals("README", fileInfoResponse.children().last().name());
+            assertEquals("src", simpleFileInfoResponse.children().first().name());
+            assertEquals("README", simpleFileInfoResponse.children().last().name());
         }
     }
 }

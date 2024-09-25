@@ -21,7 +21,16 @@ public class FileController {
     @GetMapping("/files")
     public Response getFileList(@Login SignInInfo signInInfo, @RequestParam Long noteId) {
         try {
-            return Response.success(fileService.getFileInfoList(noteId));
+            return Response.success(fileService.getSimpleFileInfoList(noteId));
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    @GetMapping("/file")
+    public Response getFile(@Login SignInInfo signInInfo, @RequestParam Long noteId, @RequestParam String filePath) {
+        try {
+            return Response.success(fileService.getDetailFileInfo(noteId, filePath));
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
