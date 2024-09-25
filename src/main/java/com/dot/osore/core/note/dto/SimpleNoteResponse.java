@@ -1,6 +1,6 @@
 package com.dot.osore.core.note.dto;
 
-import static com.dot.osore.global.parser.GithubParser.parseRepoName;
+import static com.dot.osore.global.github.GithubParser.parseRepoName;
 
 import com.dot.osore.core.note.entity.Note;
 

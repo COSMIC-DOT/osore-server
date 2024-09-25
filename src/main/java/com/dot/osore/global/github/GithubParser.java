@@ -1,4 +1,4 @@
-package com.dot.osore.global.parser;
+package com.dot.osore.global.github;
 
 import java.util.List;
 

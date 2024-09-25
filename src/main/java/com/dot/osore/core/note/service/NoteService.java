@@ -1,6 +1,6 @@
 package com.dot.osore.core.note.service;
 
-import static com.dot.osore.global.parser.GithubParser.parseRepoName;
+import static com.dot.osore.global.github.GithubParser.parseRepoName;
 
 import com.dot.osore.core.file.service.FileService;
 import com.dot.osore.core.member.entity.Member;
@@ -10,13 +10,13 @@ import com.dot.osore.core.note.dto.DetailNoteResponse;
 import com.dot.osore.core.note.dto.SimpleNoteResponse;
 import com.dot.osore.core.note.entity.Note;
 import com.dot.osore.core.note.repository.NoteRepository;
+import com.dot.osore.global.github.GithubConnector;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,9 +26,7 @@ public class NoteService {
     private final MemberService memberService;
     private final FileService fileService;
     private final NoteRepository noteRepository;
-
-    @Value("${client.github.token}")
-    private String token;
+    private final GithubConnector githubConnector;
 
     /**
      * 사용자 Id를 통해 노트 정보들을 가져오는 메소드
@@ -64,7 +62,7 @@ public class NoteService {
         Member member = memberService.findById(signInId);
         String repository = parseRepoName(note.url());
 
-        GitHub github = GitHub.connectUsingOAuth(token);
+        GitHub github = githubConnector.getGithubInstance();
         GHRepository repo = github.getRepository(repository);
 
         String avatar = repo.getOwner().getAvatarUrl();

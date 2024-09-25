@@ -8,6 +8,7 @@ import com.dot.osore.core.note.repository.NoteRepository;
 import com.dot.osore.core.note.service.NoteService;
 import com.dot.osore.core.note.service.RepoService;
 import com.dot.osore.core.file.service.FileService;
+import com.dot.osore.global.github.GithubConnector;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,9 @@ public abstract class TestContext {
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
+
+    @Autowired
+    protected GithubConnector githubConnector;
 
     @Autowired
     protected MemberRepository memberRepository;
