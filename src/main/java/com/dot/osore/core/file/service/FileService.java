@@ -1,12 +1,13 @@
 package com.dot.osore.core.file.service;
 
-import static com.dot.osore.global.parser.GithubParser.parseRepoName;
+import static com.dot.osore.global.github.GithubParser.parseRepoName;
 
 import com.dot.osore.core.file.dto.DetailFileInfoResponse;
 import com.dot.osore.core.file.dto.SimpleFileInfoResponse;
 import com.dot.osore.core.file.entity.File;
 import com.dot.osore.core.file.repository.FileRepository;
 import com.dot.osore.core.note.entity.Note;
+import com.dot.osore.global.github.GithubConnector;
 import java.io.IOException;
 import java.util.List;
 import java.util.TreeSet;
@@ -16,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,10 +24,8 @@ import org.springframework.stereotype.Service;
 public class FileService {
 
     private final FileRepository fileRepository;
+    private final GithubConnector githubConnector;
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
-
-    @Value("${client.github.token}")
-    private String token;
 
     /**
      * 깃허브 저장소의 파일들을 저장하는 메서드
@@ -36,7 +34,7 @@ public class FileService {
      * @param branch 브랜치 이름
      */
     public void saveRepositoryFiles(String url, String branch, Note note) throws Exception {
-        GitHub github = GitHub.connectUsingOAuth(token);
+        GitHub github = githubConnector.getGithubInstance();
         GHRepository repo = github.getRepository(parseRepoName(url));
         fetchFilesFromDirectory(repo, "", branch, note);
     }
