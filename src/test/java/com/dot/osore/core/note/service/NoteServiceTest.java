@@ -26,7 +26,7 @@ class NoteServiceTest extends TestContext {
             Member savedMember = memberRepository.save(member);
 
             Note testNote1 = Note.builder()
-                    .url("test1")
+                    .url("https://github.com/test/test1")
                     .title("test1")
                     .avatar("test1")
                     .description("test1")
@@ -39,7 +39,7 @@ class NoteServiceTest extends TestContext {
                     .build();
 
             Note testNote2 = Note.builder()
-                    .url("test2")
+                    .url("https://github.com/test/test2")
                     .title("test2")
                     .avatar("test2")
                     .description("test2")
