@@ -89,14 +89,24 @@ public class NoteService {
     /**
      * 노트 정보를 삭제하는 메소드
      *
-     * @param noteId   노트 Id
+     * @param noteId 노트 Id
      */
     @Transactional
     public void deleteNote(Long noteId) {
-        System.out.println("noteId = " + noteId);
         fileService.deleteByNoteId(noteId);
-        System.out.println("noteId = " + noteId);
         noteRepository.deleteById(noteId);
-        System.out.println("noteId = " + noteId);
+    }
+
+    /**
+     * 노트 이름을 수정하는 메소드
+     *
+     * @param noteId 노트 Id
+     * @param title  수정할 이름
+     */
+    @Transactional
+    public void updateNoteTitle(Long noteId, String title) {
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 노트를 찾을 수 없습니다."));
+        note.setTitle(title);
     }
 }

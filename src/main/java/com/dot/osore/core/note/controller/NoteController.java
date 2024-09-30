@@ -4,7 +4,6 @@ import com.dot.osore.core.auth.dto.SignInInfo;
 import com.dot.osore.core.auth.handler.Login;
 import com.dot.osore.core.note.dto.DetailNoteListResponse;
 import com.dot.osore.core.note.dto.NoteRequest;
-import com.dot.osore.core.note.dto.SimpleNoteResponse;
 import com.dot.osore.core.note.service.NoteService;
 import com.dot.osore.global.constant.ErrorCode;
 import com.dot.osore.global.response.Response;
@@ -12,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +38,17 @@ public class NoteController {
     public Response getNote(@RequestParam Long noteId, @Login SignInInfo signInInfo) {
         try {
             return Response.success(noteService.getNote(noteId));
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    @PutMapping("/note")
+    public Response updateNoteTitle(@RequestParam Long noteId, @RequestParam String title, @Login SignInInfo signInInfo) {
+        try {
+            noteService.updateNoteTitle(noteId, title);
+            DetailNoteListResponse response = new DetailNoteListResponse(noteService.getNoteList(signInInfo.id()));
+            return Response.success(response);
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }

@@ -69,4 +69,8 @@ public class Note extends BaseEntity {
         this.version = version;
         this.member = member;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

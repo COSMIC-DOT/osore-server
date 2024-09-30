@@ -125,4 +125,39 @@ class NoteServiceTest extends TestContext {
             assertFalse(noteRepository.findById(savedNote.getId()).isPresent());
         }
     }
+
+    @Nested
+    class updateNoteTitle_메소드는 {
+
+        @Test
+        void 노트_이름을_수정한다() {
+            // given
+            Member member = Member.builder()
+                    .name("test")
+                    .avatar("test")
+                    .build();
+            Member savedMember = memberRepository.save(member);
+
+            Note testNote1 = Note.builder()
+                    .url("test1")
+                    .title("test1")
+                    .avatar("test1")
+                    .description("test1")
+                    .contributorsCount(1)
+                    .starsCount(1)
+                    .forksCount(1)
+                    .branch("test1")
+                    .version("test1")
+                    .member(savedMember)
+                    .build();
+            Note savedNote = noteRepository.save(testNote1);
+
+            // when
+            noteService.updateNoteTitle(savedNote.getId(), "test2");
+
+            // then
+            Note note = noteRepository.findById(savedNote.getId()).orElse(null);
+            assertEquals("test2", note.getTitle());
+        }
+    }
 }
