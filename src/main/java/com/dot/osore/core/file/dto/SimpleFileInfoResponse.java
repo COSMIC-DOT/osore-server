@@ -6,6 +6,7 @@ public record SimpleFileInfoResponse(
         String type,
         String name,
         String extension,
+        String path,
         TreeSet<SimpleFileInfoResponse> children
 ) implements Comparable<SimpleFileInfoResponse> {
 

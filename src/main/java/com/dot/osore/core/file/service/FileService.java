@@ -67,7 +67,7 @@ public class FileService {
      */
     public SimpleFileInfoResponse getSimpleFileInfoList(Long noteId) {
         List<File> files = fileRepository.findByNote_Id(noteId);
-        SimpleFileInfoResponse root = new SimpleFileInfoResponse("folder", "root", null, new TreeSet<>());
+        SimpleFileInfoResponse root = new SimpleFileInfoResponse("folder", "root", null, null, new TreeSet<>());
 
         for (File file : files) {
             String path = file.getPath();
@@ -76,13 +76,24 @@ public class FileService {
 
             for (int i = 0; i < parts.length; i++) {
                 String part = parts[i];
+                String fileName;
+                String extension;
+
                 boolean isFile = part.contains(".");
-                String fileName = isFile ? part.substring(0, part.lastIndexOf(".")) : part;
-                String extension = isFile ? part.substring(part.lastIndexOf(".") + 1) : null;
+                if (!isFile && i == parts.length - 1) {
+                    isFile = true;
+                    fileName = part;
+                    extension = null;
+                } else {
+                    fileName = isFile ? part.substring(0, part.lastIndexOf(".")) : part;
+                    extension = isFile ? part.substring(part.lastIndexOf(".") + 1) : null;
+                }
 
                 SimpleFileInfoResponse child = current.findChildByName(fileName);
                 if (child == null) {
-                    child = new SimpleFileInfoResponse(isFile ? "file" : "folder", fileName, extension, new TreeSet<>());
+                    child = new SimpleFileInfoResponse(isFile ? "file" : "folder",
+                            fileName, extension,
+                            isFile? path: null, new TreeSet<>());
                     current.children().add(child);
                 }
                 current = child;
