@@ -37,7 +37,7 @@ public class NoteController {
     @GetMapping("/note")
     public Response getNote(@RequestParam Long noteId, @Login SignInInfo signInInfo) {
         try {
-            return Response.success(noteService.getNote(noteId));
+            return Response.success(noteService.getSimpleNoteResponse(noteId));
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }

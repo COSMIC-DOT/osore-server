@@ -46,10 +46,20 @@ public class NoteService {
      *
      * @param noteId 노트 Id
      */
-    public SimpleNoteResponse getNote(Long noteId) throws Exception {
+    public SimpleNoteResponse getSimpleNoteResponse(Long noteId) throws Exception {
         Note note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 노트를 찾을 수 없습니다."));
         return SimpleNoteResponse.from(note);
+    }
+
+    /**
+     * 노트 정보를 가져오는 메소드
+     *
+     * @param noteId 노트 Id
+     */
+    public Note getNoteById(Long noteId) {
+        return noteRepository.findById(noteId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 노트를 찾을 수 없습니다."));
     }
 
     /**
