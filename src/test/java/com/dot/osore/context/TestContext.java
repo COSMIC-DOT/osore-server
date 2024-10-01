@@ -4,6 +4,8 @@ import com.dot.osore.core.auth.service.AuthService;
 import com.dot.osore.core.file.repository.FileRepository;
 import com.dot.osore.core.member.repository.MemberRepository;
 import com.dot.osore.core.member.service.MemberService;
+import com.dot.osore.core.memo.repository.MemoRepository;
+import com.dot.osore.core.memo.service.MemoService;
 import com.dot.osore.core.note.repository.NoteRepository;
 import com.dot.osore.core.note.service.NoteService;
 import com.dot.osore.core.note.service.RepoService;
@@ -33,6 +35,9 @@ public abstract class TestContext {
     protected FileRepository fileRepository;
 
     @Autowired
+    protected MemoRepository memoRepository;
+
+    @Autowired
     protected MemberService memberService;
 
     @Autowired
@@ -46,6 +51,9 @@ public abstract class TestContext {
 
     @Autowired
     protected FileService fileService;
+
+    @Autowired
+    protected MemoService memoService;
 
     @AfterEach
     void tearDown() {
