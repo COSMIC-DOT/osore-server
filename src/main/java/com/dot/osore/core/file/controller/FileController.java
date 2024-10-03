@@ -7,19 +7,20 @@ import com.dot.osore.global.constant.ErrorCode;
 import com.dot.osore.global.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/files")
 @RequiredArgsConstructor
 public class FileController {
 
     private final FileService fileService;
 
-    @GetMapping("/files")
-    public Response getFileList(@Login SignInInfo signInInfo, @RequestParam Long noteId) {
+    @GetMapping
+    public Response getFileList(@RequestParam Long noteId, @Login SignInInfo signInInfo) {
         try {
             return Response.success(fileService.getSimpleFileInfoList(noteId));
         } catch (Exception e) {
@@ -27,8 +28,8 @@ public class FileController {
         }
     }
 
-    @GetMapping("/file")
-    public Response getFile(@Login SignInInfo signInInfo, @RequestParam Long noteId, @RequestParam String filePath) {
+    @GetMapping("/{filePath}")
+    public Response getFile(@RequestParam Long noteId, @PathVariable String filePath, @Login SignInInfo signInInfo) {
         try {
             return Response.success(fileService.getDetailFileInfo(noteId, filePath));
         } catch (Exception e) {
