@@ -5,6 +5,8 @@ import com.dot.osore.core.memo.repository.MemoRepository;
 import com.dot.osore.core.note.entity.Note;
 import com.dot.osore.core.note.service.NoteService;
 import jakarta.transaction.Transactional;
+import java.util.Comparator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -59,5 +61,16 @@ public class MemoService {
     @Transactional
     public void deleteMemo(Long memoId) {
         memoRepository.deleteById(memoId);
+    }
+
+    /**
+     * 메모 리스트를 가져오는 메서드
+     *
+     * @param noteId 노트 ID
+     */
+    public List<Long> getMemoList(Long noteId) {
+        List<Memo> memoList = memoRepository.findByNoteId(noteId);
+        memoList.sort(Comparator.comparing(Memo::getPage));
+        return memoList.stream().map(Memo::getId).toList();
     }
 }

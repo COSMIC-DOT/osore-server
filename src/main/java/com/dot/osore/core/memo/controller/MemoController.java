@@ -3,11 +3,13 @@ package com.dot.osore.core.memo.controller;
 import com.dot.osore.core.auth.dto.SignInInfo;
 import com.dot.osore.core.auth.handler.Login;
 import com.dot.osore.core.memo.dto.CreateMemoRequest;
+import com.dot.osore.core.memo.dto.MemoListResponse;
 import com.dot.osore.core.memo.dto.MemoResponse;
 import com.dot.osore.core.memo.dto.UpdateMemoRequest;
 import com.dot.osore.core.memo.service.MemoService;
 import com.dot.osore.global.constant.ErrorCode;
 import com.dot.osore.global.response.Response;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,16 @@ public class MemoController {
 
     private final MemoService memoService;
 
+    @GetMapping
+    public Response getMemoList(@RequestParam Long noteId, @Login SignInInfo signInInfo) {
+        try {
+            List<Long> memoList = memoService.getMemoList(noteId);
+            return Response.success(new MemoListResponse(memoList));
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
     @GetMapping("/{memoId}")
     public Response getMemo(@PathVariable Long memoId, @Login SignInInfo signInInfo) {
         try {
@@ -40,7 +52,8 @@ public class MemoController {
     public Response saveMemo(@RequestBody CreateMemoRequest createMemoRequest, @Login SignInInfo signInInfo) {
         try {
             memoService.saveMemo(createMemoRequest.noteId(), createMemoRequest.order(), createMemoRequest.content());
-            return Response.success();
+            List<Long> memoList = memoService.getMemoList(createMemoRequest.noteId());
+            return Response.success(new MemoListResponse(memoList));
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
@@ -51,17 +64,20 @@ public class MemoController {
                                @Login SignInInfo signInInfo) {
         try {
             memoService.updateMemo(memoId, updateMemoRequest.content());
-            return Response.success();
+            List<Long> memoList = memoService.getMemoList(updateMemoRequest.noteId());
+            return Response.success(new MemoListResponse(memoList));
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
     }
 
     @DeleteMapping("/{memoId}")
-    public Response deleteMemo(@PathVariable Long memoId, @Login SignInInfo signInInfo) {
+    public Response deleteMemo(@PathVariable Long memoId, @RequestParam Long noteId,
+                               @Login SignInInfo signInInfo) {
         try {
             memoService.deleteMemo(memoId);
-            return Response.success();
+            List<Long> memoList = memoService.getMemoList(noteId);
+            return Response.success(new MemoListResponse(memoList));
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
