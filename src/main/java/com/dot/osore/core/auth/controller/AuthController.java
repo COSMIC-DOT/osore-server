@@ -39,7 +39,7 @@ public class AuthController {
 
     @PublicPath
     @GetMapping("/github")
-    public Response githubRedirect(HttpServletResponse response, HttpSession session) {
+    public Response githubRedirect(HttpServletResponse response) {
         try {
             String oauthURL = authService.getOAuthURL(OAuthPlatform.GITHUB);
             response.sendRedirect(oauthURL);
@@ -54,6 +54,31 @@ public class AuthController {
     public Response githubSignIn(HttpServletResponse response, HttpSession session, @RequestParam String code) {
         try {
             SignInInfo signInInfo = authService.signInOAuth(code, OAuthPlatform.GITHUB);
+            session.setAttribute("signInInfo", signInInfo);
+            response.sendRedirect(clientURL);
+            return Response.success();
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    @PublicPath
+    @GetMapping("/google")
+    public Response googleRedirect(HttpServletResponse response) {
+        try {
+            String oauthURL = authService.getOAuthURL(OAuthPlatform.GOOGLE);
+            response.sendRedirect(oauthURL);
+            return Response.success();
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    @PublicPath
+    @GetMapping("/google/callback")
+    public Response googleSignIn(HttpServletResponse response, HttpSession session, @RequestParam String code) {
+        try {
+            SignInInfo signInInfo = authService.signInOAuth(code, OAuthPlatform.GOOGLE);
             session.setAttribute("signInInfo", signInInfo);
             response.sendRedirect(clientURL);
             return Response.success();
