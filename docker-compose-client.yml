@@ -6,28 +6,9 @@ services:
     container_name: app
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
-    depends_on:
-      - db
     environment:
-      spring:
-      SPRING_DATASOURCE_URL: "jdbc:mariadb://db:${MYSQL_PORT}/osore"
-      SPRING_DATASOURCE_USERNAME: "${MYSQL_USER}"
-      SPRING_DATASOURCE_PASSWORD: "${MYSQL_PASSWORD}"
-
-
-  db:
-    image: 'mariadb:latest'
-    container_name: db
-    ports:
-      - "${MYSQL_PORT}:${MYSQL_PORT}"
-    volumes:
-      - "./mariadb/conf.d:/etc/mysql/conf.d"
-      - "./mariadb/data:/var/lib/mysql"
-    environment:
-      MYSQL_USER: "${MYSQL_USER}"
-      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
-      MYSQL_DATABASE: "${MYSQL_DATABASE}"
-      MYSQL_ROOT_PASSWORD: "${MYSQL_PASSWORD}"
-
-volumes:
-  mariadb:
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GITHUB_TOKENS=${GITHUB_TOKENS}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
