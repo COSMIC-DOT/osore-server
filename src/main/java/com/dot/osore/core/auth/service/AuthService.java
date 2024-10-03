@@ -30,6 +30,12 @@ public class AuthService {
     @Value("${client.github.secret}")
     private String githubClientSecret;
 
+    @Value("${client.google.id}")
+    private String googleClientId;
+
+    @Value("${client.google.secret}")
+    private String googleClientSecret;
+
     /**
      * 기본 로그인을 처리하는 메서드
      *
@@ -52,13 +58,21 @@ public class AuthService {
      * @param platform OAuth 플랫폼
      */
     public SignInInfo signInOAuth(String code, OAuthPlatform platform) throws Exception {
-        String accessToken = getGithubAccessToken(code);
-        String userInfo = getUserInfo(accessToken);
+        String accessToken = getAccessToken(code, platform);
+        String userInfo = getUserInfo(accessToken, platform);
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> userInfoMap = objectMapper.readValue(userInfo, Map.class);
-        String name = userInfoMap.get("login");
-        String avatar = userInfoMap.get("avatar_url");
+
+        String name;
+        String avatar;
+        if (platform == OAuthPlatform.GITHUB) {
+            name = userInfoMap.get("login");
+            avatar = userInfoMap.get("avatar_url");
+        } else {
+            name = userInfoMap.get("email").split("@")[0];
+            avatar = userInfoMap.get("picture");
+        }
 
         Member member = memberService.findByName(name);
         if (member != null) {
@@ -68,13 +82,28 @@ public class AuthService {
         return new SignInInfo(id);
     }
 
-    private String getGithubAccessToken(String code) throws IOException {
-        String urlParameters = String.format("client_id=%s&client_secret=%s&code=%s",
-                URLEncoder.encode(githubClientId, "UTF-8"),
-                URLEncoder.encode(githubClientSecret, "UTF-8"),
-                URLEncoder.encode(code, "UTF-8"));
+    private String getAccessToken(String code, OAuthPlatform platform) throws IOException {
+        String urlParameters;
+        URL url;
 
-        URL url = new URL("https://github.com/login/oauth/access_token");
+        if (platform == OAuthPlatform.GITHUB) {
+            urlParameters = String.format("client_id=%s&client_secret=%s&code=%s",
+                    URLEncoder.encode(githubClientId, "UTF-8"),
+                    URLEncoder.encode(githubClientSecret, "UTF-8"),
+                    URLEncoder.encode(code, "UTF-8"));
+
+            url = new URL("https://github.com/login/oauth/access_token");
+        } else {
+            urlParameters = String.format("client_id=%s&client_secret=%s&code=%s&redirect_uri=%s&grant_type=authorization_code",
+                    URLEncoder.encode(googleClientId, "UTF-8"),
+                    URLEncoder.encode(googleClientSecret, "UTF-8"),
+                    URLEncoder.encode(code, "UTF-8"),
+                    URLEncoder.encode("http://localhost:8080/api/auth/google/callback", "UTF-8"));
+
+            url = new URL("https://oauth2.googleapis.com/token");
+        }
+
+
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
@@ -93,17 +122,28 @@ public class AuthService {
     }
 
     private String extractAccessToken(String jsonResponse) {
-        int start = jsonResponse.indexOf("\"access_token\":\"") + 16;
-        int end = jsonResponse.indexOf("\"", start);
-        return jsonResponse.substring(start, end);
+        String sanitizedResponse = jsonResponse.replaceAll("\\s+", "");
+        int start = sanitizedResponse.indexOf("\"access_token\":\"") + 16;
+        int end = sanitizedResponse.indexOf("\"", start);
+        return sanitizedResponse.substring(start, end);
     }
 
-    private String getUserInfo(String accessToken) throws IOException {
-        URL url = new URL("https://api.github.com/user");
+    private String getUserInfo(String accessToken, OAuthPlatform platform) throws IOException {
+        URL url;
+        if (platform == OAuthPlatform.GITHUB) {
+            url = new URL("https://api.github.com/user");
+        } else {
+            url = new URL("https://www.googleapis.com/oauth2/v1/userinfo");
+        }
+
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
-        conn.setRequestProperty("Authorization", "token " + accessToken);
+        if (platform == OAuthPlatform.GITHUB) {
+            conn.setRequestProperty("Authorization", "token " + accessToken);
+        } else {
+            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+        }
         conn.setRequestProperty("User-Agent", "JavaApp");
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
@@ -123,7 +163,8 @@ public class AuthService {
             case GITHUB:
                 return String.format("https://github.com/login/oauth/authorize?client_id=%s", githubClientId);
             case GOOGLE:
-                return "hello";
+                return String.format("https://accounts.google.com/o/oauth2/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=openid%%20email%%20profile",
+                        googleClientId, URLEncoder.encode("http://localhost:8080/api/auth/google/callback", "UTF-8"));
         }
         throw new Exception();
     }
