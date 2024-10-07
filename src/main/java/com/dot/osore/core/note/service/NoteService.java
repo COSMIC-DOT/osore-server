@@ -12,6 +12,7 @@ import com.dot.osore.core.note.entity.Note;
 import com.dot.osore.core.note.repository.NoteRepository;
 import com.dot.osore.global.github.GithubConnector;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class NoteService {
      * @param signInId 사용자 Id
      */
     public List<DetailNoteResponse> getNoteList(Long signInId) {
-        List<Note> notes = noteRepository.findByMember_Id(signInId);
+        List<Note> notes = noteRepository.findBymember_IdOrderByViewedAtDesc(signInId);
         List<DetailNoteResponse> notesResponse = new ArrayList<>();
         notes.forEach(note ->
                 notesResponse.add(DetailNoteResponse.from(note)));
@@ -92,6 +93,7 @@ public class NoteService {
                 .branch(note.branch())
                 .version(note.version())
                 .member(member)
+                .viewedAt(LocalDateTime.now())
                 .build());
         fileService.saveRepositoryFiles(note.url(), note.branch(), savedNote);
     }
@@ -118,5 +120,17 @@ public class NoteService {
         Note note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 노트를 찾을 수 없습니다."));
         note.setTitle(title);
+    }
+
+    /**
+     * 노트의 열람 시간을 변경하는 메서드
+     *
+     * @param noteId 노트 Id
+     */
+    @Transactional
+    public void changeViewedAt(Long noteId) {
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 노트를 찾을 수 없습니다."));
+        note.setViewedAt(LocalDateTime.now());
     }
 }

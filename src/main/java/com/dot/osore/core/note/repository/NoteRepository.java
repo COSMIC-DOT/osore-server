@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {
-    List<Note> findByMember_Id(Long id);
+    List<Note> findBymember_IdOrderByViewedAtDesc(Long signInId);
 }

@@ -78,4 +78,14 @@ public class NoteController {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
     }
+
+    @PostMapping("/{noteId}/exit")
+    public Response exitNote(@PathVariable Long noteId, @Login SignInInfo signInInfo) {
+        try {
+            noteService.changeViewedAt(noteId);
+            return Response.success();
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
 }
