@@ -7,6 +7,7 @@ import com.dot.osore.core.member.entity.Member;
 import com.dot.osore.core.note.dto.NoteRequest;
 import com.dot.osore.core.note.dto.DetailNoteResponse;
 import com.dot.osore.core.note.entity.Note;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ class NoteServiceTest extends TestContext {
                     .branch("test1")
                     .version("test1")
                     .member(savedMember)
+                    .viewedAt(LocalDateTime.now())
                     .build();
 
             Note testNote2 = Note.builder()
@@ -49,6 +51,7 @@ class NoteServiceTest extends TestContext {
                     .branch("test2")
                     .version("test2")
                     .member(savedMember)
+                    .viewedAt(LocalDateTime.now())
                     .build();
             noteRepository.save(testNote1);
             noteRepository.save(testNote2);

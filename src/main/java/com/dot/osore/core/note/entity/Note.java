@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,13 +52,17 @@ public class Note extends BaseEntity {
     @Column(name = "version")
     private String version;
 
+    @Column(name = "viewedAt")
+    private LocalDateTime viewedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
     public Note(String url, String title, String avatar, String description, Integer contributorsCount,
-                Integer starsCount, Integer forksCount, String branch, String version, Member member) {
+                Integer starsCount, Integer forksCount, String branch, String version, Member member,
+                LocalDateTime viewedAt) {
         this.url = url;
         this.title = title;
         this.avatar = avatar;
@@ -68,9 +73,14 @@ public class Note extends BaseEntity {
         this.branch = branch;
         this.version = version;
         this.member = member;
+        this.viewedAt = viewedAt;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setViewedAt(LocalDateTime viewedAt) {
+        this.viewedAt = viewedAt;
     }
 }
