@@ -30,7 +30,7 @@ public class FileService {
     /**
      * 깃허브 저장소의 파일들을 저장하는 메서드
      *
-     * @param url 깃허브 저장소 URL
+     * @param url    깃허브 저장소 URL
      * @param branch 브랜치 이름
      */
     public void saveRepositoryFiles(String url, String branch, Note note) throws Exception {
@@ -67,7 +67,7 @@ public class FileService {
      */
     public SimpleFileInfoResponse getSimpleFileInfoList(Long noteId) {
         List<File> files = fileRepository.findByNote_Id(noteId);
-        SimpleFileInfoResponse root = new SimpleFileInfoResponse("folder", "root", null, null, new TreeSet<>());
+        SimpleFileInfoResponse root = new SimpleFileInfoResponse(null, "folder", "root", null, new TreeSet<>());
 
         for (File file : files) {
             String path = file.getPath();
@@ -91,9 +91,11 @@ public class FileService {
 
                 SimpleFileInfoResponse child = current.findChildByName(fileName);
                 if (child == null) {
-                    child = new SimpleFileInfoResponse(isFile ? "file" : "folder",
+                    child = new SimpleFileInfoResponse(
+                            isFile ? file.getId() : null,
+                            isFile ? "file" : "folder",
                             fileName, extension,
-                            isFile? path: null, new TreeSet<>());
+                            new TreeSet<>());
                     current.children().add(child);
                 }
                 current = child;

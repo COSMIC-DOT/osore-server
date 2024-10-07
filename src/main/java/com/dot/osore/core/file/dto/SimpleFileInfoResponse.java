@@ -3,10 +3,10 @@ package com.dot.osore.core.file.dto;
 import java.util.TreeSet;
 
 public record SimpleFileInfoResponse(
+        Long id,
         String type,
         String name,
         String extension,
-        String path,
         TreeSet<SimpleFileInfoResponse> children
 ) implements Comparable<SimpleFileInfoResponse> {
 
