@@ -105,8 +105,8 @@ public class FileService {
         return root;
     }
 
-    public DetailFileInfoResponse getDetailFileInfo(Long noteId, String filePath) {
-        File file = fileRepository.findByNote_IdAndPath(noteId, filePath);
+    public DetailFileInfoResponse getDetailFileInfo(Long fileId) {
+        File file = fileRepository.findById(fileId).orElseThrow();
         return DetailFileInfoResponse.from(file);
     }
 

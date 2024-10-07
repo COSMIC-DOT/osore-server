@@ -28,10 +28,10 @@ public class FileController {
         }
     }
 
-    @GetMapping("/{filePath}")
-    public Response getFile(@RequestParam Long noteId, @PathVariable String filePath, @Login SignInInfo signInInfo) {
+    @GetMapping("/{fileId}")
+    public Response getFile(@PathVariable Long fileId, @Login SignInInfo signInInfo) {
         try {
-            return Response.success(fileService.getDetailFileInfo(noteId, filePath));
+            return Response.success(fileService.getDetailFileInfo(fileId));
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
