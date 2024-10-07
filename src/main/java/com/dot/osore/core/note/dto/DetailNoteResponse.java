@@ -12,7 +12,8 @@ public record DetailNoteResponse(
         String description,
         Integer contributorsCount,
         Integer starsCount,
-        Integer forksCount
+        Integer forksCount,
+        ViewedDateTime viewedAt
 ) {
 
     public static DetailNoteResponse from(Note note) {
@@ -25,7 +26,8 @@ public record DetailNoteResponse(
                     note.getDescription(),
                     note.getContributorsCount(),
                     note.getStarsCount(),
-                    note.getForksCount()
+                    note.getForksCount(),
+                    ViewedDateTime.from(note.getViewedAt())
             );
         } catch (Exception e) {
             throw new IllegalArgumentException("잘못된 URL 형식입니다.");
