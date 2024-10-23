@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +26,7 @@ public class Chat {
     private Long id;
 
     @Column(nullable = false)
-    private String message;
+    private String chat;
 
     @Column(nullable = false)
     private ChatSender sender;
@@ -36,4 +37,13 @@ public class Chat {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatting_room_id")
     private ChattingRoom chattingRoom;
+
+    @Builder
+    public Chat(String chat, ChatSender sender, ChattingRoom chattingRoom) {
+        this.chat = chat;
+        this.sender = sender;
+        this.chattingRoom = chattingRoom;
+        this.createdAt = LocalDateTime.now();
+    }
+
 }

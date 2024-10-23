@@ -1,6 +1,7 @@
 package com.dot.osore.core.chat.entity;
 
 import com.dot.osore.core.note.entity.Note;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +26,9 @@ public class ChattingRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String title;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "note_id")
     private Note note;
@@ -33,7 +37,8 @@ public class ChattingRoom {
     private List<Chat> chats;
 
     @Builder
-    public ChattingRoom(Note note) {
+    public ChattingRoom(String title, Note note) {
+        this.title = title;
         this.note = note;
     }
 }

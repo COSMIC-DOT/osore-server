@@ -4,6 +4,6 @@ import java.util.List;
 
 public record CreateChattingRoomResponse(
         Long chatRoomId,
-        List<ChattingRoomListResponse> chattingRoomList
+        List<ChattingRoomResponse> chattingRoomList
 ) {
 }

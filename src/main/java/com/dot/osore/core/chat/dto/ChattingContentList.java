@@ -12,13 +12,13 @@ public record ChattingContentList(
 ) {
     public static List<ChattingContentList> from(List<Chat> chats) {
         return chats.stream()
-                .collect(groupingBy(Chat::getCreatedAt))
+                .collect(groupingBy(chat -> chat.getCreatedAt().toLocalDate()))
                 .entrySet().stream()
                 .map(entry -> new ChattingContentList(
-                        entry.getKey(),
+                        entry.getKey().atStartOfDay(),
                         entry.getValue().stream()
                                 .map(chat -> new ChattingContent(
-                                        chat.getMessage(),
+                                        chat.getChat(),
                                         chat.getSender()
                                 ))
                                 .toList()
