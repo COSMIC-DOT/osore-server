@@ -5,6 +5,7 @@ import com.dot.osore.global.resolver.LanguageResolver;
 
 public record DetailFileInfoResponse(
         String content,
+        String path,
         String language
 ) {
 
@@ -19,6 +20,7 @@ public record DetailFileInfoResponse(
 
         return new DetailFileInfoResponse(
                 file.getContent(),
+                file.getPath(),
                 LanguageResolver.getLanguageByExtension(extension)
         );
     }

@@ -30,7 +30,7 @@ public class FileService {
     /**
      * 깃허브 저장소의 파일들을 저장하는 메서드
      *
-     * @param url 깃허브 저장소 URL
+     * @param url    깃허브 저장소 URL
      * @param branch 브랜치 이름
      */
     public void saveRepositoryFiles(String url, String branch, Note note) throws Exception {
@@ -67,7 +67,7 @@ public class FileService {
      */
     public SimpleFileInfoResponse getSimpleFileInfoList(Long noteId) {
         List<File> files = fileRepository.findByNote_Id(noteId);
-        SimpleFileInfoResponse root = new SimpleFileInfoResponse("folder", "root", null, null, new TreeSet<>());
+        SimpleFileInfoResponse root = new SimpleFileInfoResponse(null, "folder", "root", null, new TreeSet<>());
 
         for (File file : files) {
             String path = file.getPath();
@@ -79,9 +79,8 @@ public class FileService {
                 String fileName;
                 String extension;
 
-                boolean isFile = part.contains(".");
-                if (!isFile && i == parts.length - 1) {
-                    isFile = true;
+                boolean isFile = i == parts.length - 1;
+                if (!part.contains(".")) {
                     fileName = part;
                     extension = null;
                 } else {
@@ -91,9 +90,11 @@ public class FileService {
 
                 SimpleFileInfoResponse child = current.findChildByName(fileName);
                 if (child == null) {
-                    child = new SimpleFileInfoResponse(isFile ? "file" : "folder",
+                    child = new SimpleFileInfoResponse(
+                            isFile ? file.getId() : null,
+                            isFile ? "file" : "folder",
                             fileName, extension,
-                            isFile? path: null, new TreeSet<>());
+                            new TreeSet<>());
                     current.children().add(child);
                 }
                 current = child;
@@ -103,8 +104,8 @@ public class FileService {
         return root;
     }
 
-    public DetailFileInfoResponse getDetailFileInfo(Long noteId, String filePath) {
-        File file = fileRepository.findByNote_IdAndPath(noteId, filePath);
+    public DetailFileInfoResponse getDetailFileInfo(Long fileId) {
+        File file = fileRepository.findById(fileId).orElseThrow();
         return DetailFileInfoResponse.from(file);
     }
 

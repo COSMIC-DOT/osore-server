@@ -10,7 +10,9 @@ public class LanguageResolver {
 
     static {
         extensionToLanguageMap.put("js", "javascript");
+        extensionToLanguageMap.put("jsx", "javascript");
         extensionToLanguageMap.put("ts", "typescript");
+        extensionToLanguageMap.put("tsx", "typescript");
         extensionToLanguageMap.put("py", "python");
         extensionToLanguageMap.put("java", "java");
         extensionToLanguageMap.put("cpp", "cpp");

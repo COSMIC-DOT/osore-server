@@ -83,7 +83,8 @@ public class NoteController {
     public Response exitNote(@PathVariable Long noteId, @Login SignInInfo signInInfo) {
         try {
             noteService.changeViewedAt(noteId);
-            return Response.success();
+            DetailNoteListResponse response = new DetailNoteListResponse(noteService.getNoteList(signInInfo.id()));
+            return Response.success(response);
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
