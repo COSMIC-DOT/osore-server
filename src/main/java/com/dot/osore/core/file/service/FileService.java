@@ -79,9 +79,8 @@ public class FileService {
                 String fileName;
                 String extension;
 
-                boolean isFile = part.contains(".");
-                if (!isFile && i == parts.length - 1) {
-                    isFile = true;
+                boolean isFile = i == parts.length - 1;
+                if (!part.contains(".")) {
                     fileName = part;
                     extension = null;
                 } else {
