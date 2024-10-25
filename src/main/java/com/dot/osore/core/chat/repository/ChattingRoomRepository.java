@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChattingRoomRepository extends JpaRepository<ChattingRoom, Long> {
-    List<ChattingRoom> findByNoteId(Long noteId);
+    List<ChattingRoom> findByNoteIdOrderByCreatedAtDesc(Long noteId);
 }
