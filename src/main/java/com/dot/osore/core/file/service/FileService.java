@@ -46,8 +46,12 @@ public class FileService {
         for (GHContent content : contents) {
             if (content.isFile()) {
                 String fileContent = content.getContent();
-                File file = new File(content.getPath(), fileContent, note);
-                fileRepository.save(file);
+                try {
+                    File file = new File(content.getPath(), fileContent, note);
+                    fileRepository.save(file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (content.isDirectory()) {
                 executorService.execute(() -> {
                     try {
