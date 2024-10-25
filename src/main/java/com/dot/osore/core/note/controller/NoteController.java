@@ -73,6 +73,7 @@ public class NoteController {
     @DeleteMapping("/{noteId}")
     public Response deleteNote(@PathVariable Long noteId, @Login SignInInfo signInInfo) {
         try {
+            chatService.deleteChatRoomByNoteId(noteId);
             noteService.deleteNote(noteId);
             DetailNoteListResponse response = new DetailNoteListResponse(noteService.getNoteList(signInInfo.id()));
             return Response.success(response);
