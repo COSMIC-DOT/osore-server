@@ -151,4 +151,16 @@ public class ChatService {
             return null;
         }
     }
+
+    /**
+     * 채팅방을 삭제하는 메서드
+     *
+     * @param noteId 노트 아이디
+     */
+    @Transactional
+    public void deleteChatRoomByNoteId(Long noteId) {
+        List<ChattingRoom> chattingRooms = chattingRoomRepository.findByNoteIdOrderByCreatedAtDesc(noteId);
+        chattingRooms.forEach(chattingRoom -> chatRepository.deleteByChattingRoomId(chattingRoom.getId()));
+        chattingRoomRepository.deleteByNoteId(noteId);
+    }
 }
