@@ -1,6 +1,8 @@
 package com.dot.osore.context;
 
 import com.dot.osore.core.auth.service.AuthService;
+import com.dot.osore.core.chat.repository.ChatRepository;
+import com.dot.osore.core.chat.service.ChatService;
 import com.dot.osore.core.file.repository.FileRepository;
 import com.dot.osore.core.member.repository.MemberRepository;
 import com.dot.osore.core.member.service.MemberService;
@@ -26,6 +28,9 @@ public abstract class TestContext {
     protected GithubConnector githubConnector;
 
     @Autowired
+    protected ChatRepository chatRepository;
+
+    @Autowired
     protected MemberRepository memberRepository;
 
     @Autowired
@@ -36,6 +41,9 @@ public abstract class TestContext {
 
     @Autowired
     protected MemoRepository memoRepository;
+
+    @Autowired
+    protected ChatService chatService;
 
     @Autowired
     protected MemberService memberService;

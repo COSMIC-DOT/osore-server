@@ -10,9 +10,11 @@ import com.dot.osore.core.chat.service.ChatService;
 import com.dot.osore.global.constant.ErrorCode;
 import com.dot.osore.global.response.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,9 +38,17 @@ public class ChatController {
     public Response createChatRoom(@RequestBody CreateChattingRoomRequest request, @Login SignInInfo signInInfo) {
         try {
             Long noteId = request.noteId();
-            Long chatRoomId = chatService.createChatRoom(noteId);
-            return Response.success(
-                    new CreateChattingRoomResponse(chatRoomId, chatService.getChattingRoomList(noteId)));
+            Long roomId = chatService.createChatRoom(noteId);
+            return Response.success(new CreateChattingRoomResponse(roomId, chatService.getChattingRoomList(noteId)));
+        } catch (Exception e) {
+            return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
+        }
+    }
+
+    @GetMapping("/chat-rooms")
+    public Response getChatRooms(@RequestParam Long noteId, @Login SignInInfo signInInfo) {
+        try {
+            return Response.success(chatService.getChattingRoomList(noteId));
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }

@@ -2,6 +2,7 @@ package com.dot.osore.core.note.service;
 
 import static com.dot.osore.global.github.GithubParser.parseRepoName;
 
+import com.dot.osore.core.chat.service.ChatService;
 import com.dot.osore.core.file.service.FileService;
 import com.dot.osore.core.member.entity.Member;
 import com.dot.osore.core.member.service.MemberService;
@@ -69,7 +70,7 @@ public class NoteService {
      * @param signInId 사용자 Id
      * @param note     노트 정보
      */
-    public void saveNote(Long signInId, NoteRequest note) throws Exception {
+    public Long saveNote(Long signInId, NoteRequest note) throws Exception {
         Member member = memberService.findById(signInId);
         String repository = parseRepoName(note.url());
 
@@ -96,6 +97,7 @@ public class NoteService {
                 .viewedAt(LocalDateTime.now())
                 .build());
         fileService.saveRepositoryFiles(note.url(), note.branch(), savedNote);
+        return savedNote.getId();
     }
 
     /**

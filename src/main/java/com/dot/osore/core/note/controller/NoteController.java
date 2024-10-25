@@ -2,6 +2,7 @@ package com.dot.osore.core.note.controller;
 
 import com.dot.osore.core.auth.dto.SignInInfo;
 import com.dot.osore.core.auth.handler.Login;
+import com.dot.osore.core.chat.service.ChatService;
 import com.dot.osore.core.note.dto.DetailNoteListResponse;
 import com.dot.osore.core.note.dto.NoteRequest;
 import com.dot.osore.core.note.dto.UpdateNoteRequest;
@@ -24,7 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class NoteController {
 
-    final private NoteService noteService;
+    private final NoteService noteService;
+    private final ChatService chatService;
 
     @GetMapping
     public Response getNoteList(@Login SignInInfo signInInfo) {
@@ -59,7 +61,8 @@ public class NoteController {
     @PostMapping
     public Response saveNote(@RequestBody NoteRequest note, @Login SignInInfo signInInfo) {
         try {
-            noteService.saveNote(signInInfo.id(), note);
+            Long noteId = noteService.saveNote(signInInfo.id(), note);
+            chatService.createChatRoom(noteId);
             DetailNoteListResponse response = new DetailNoteListResponse(noteService.getNoteList(signInInfo.id()));
             return Response.success(response);
         } catch (Exception e) {

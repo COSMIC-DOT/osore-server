@@ -3,19 +3,21 @@ package com.dot.osore.core.chat.dto;
 import static java.util.stream.Collectors.groupingBy;
 
 import com.dot.osore.core.chat.entity.Chat;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public record ChattingContentList(
-        LocalDateTime date,
+        String date,
         List<ChattingContent> chatsByDate
 ) {
     public static List<ChattingContentList> from(List<Chat> chats) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         return chats.stream()
-                .collect(groupingBy(chat -> chat.getCreatedAt().toLocalDate()))
+                .collect(groupingBy(chat ->chat.getCreatedAt().toLocalDate().format(formatter)))
                 .entrySet().stream()
                 .map(entry -> new ChattingContentList(
-                        entry.getKey().atStartOfDay(),
+                        entry.getKey(),
                         entry.getValue().stream()
                                 .map(chat -> new ChattingContent(
                                         chat.getChat(),
