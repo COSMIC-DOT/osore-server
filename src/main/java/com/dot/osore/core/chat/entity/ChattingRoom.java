@@ -49,4 +49,8 @@ public class ChattingRoom {
         this.note = note;
         this.createdAt = LocalDateTime.now();
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }
