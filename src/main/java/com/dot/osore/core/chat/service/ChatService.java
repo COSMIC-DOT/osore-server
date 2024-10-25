@@ -2,7 +2,6 @@ package com.dot.osore.core.chat.service;
 
 import com.dot.osore.core.chat.constant.ChatSender;
 import com.dot.osore.core.chat.dto.ChatRequest;
-import com.dot.osore.core.chat.dto.ChattingRoomListResponse;
 import com.dot.osore.core.chat.dto.ChattingRoomResponse;
 import com.dot.osore.core.chat.dto.EmbeddingRequest;
 import com.dot.osore.core.chat.entity.Chat;
@@ -60,7 +59,7 @@ public class ChatService {
 
         HttpEntity<EmbeddingRequest> requestEntity = new HttpEntity<>(requestBody, headers);
 
-        String aiServerUrl = "http://localhost:8000/api/embedding";
+        String aiServerUrl = "http://host.docker.internal:8000/api/embedding";
 
         restTemplate.exchange(
                 aiServerUrl,
@@ -88,15 +87,34 @@ public class ChatService {
      * @param roomId 채팅 방 아이디
      * @param chat   채팅 내용
      */
+    @Transactional
     public void sendChat(Long roomId, String chat) {
         String message = sendChatMessage(roomId, chat);
 
         ChattingRoom chattingRoom = chattingRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 채팅방을 찾을 수 없습니다."));
+
+        if (chattingRoom.getTitle().equals("Chat")) {
+            setNewTitle(chat, chattingRoom);
+        }
+
         chatRepository.save(Chat.builder()
                 .chattingRoom(chattingRoom).chat(chat).sender(ChatSender.USER).build());
         chatRepository.save(Chat.builder()
-                .chattingRoom(chattingRoom).chat(chat).sender(ChatSender.SORE).build());
+                .chattingRoom(chattingRoom).chat(message).sender(ChatSender.SORE).build());
+    }
+
+    private void setNewTitle(String chat, ChattingRoom chattingRoom) {
+        String[] titleWords = chat.split(" ");
+        if (titleWords.length < 3) {
+            chattingRoom.setTitle(chat);
+            chattingRoomRepository.save(chattingRoom);
+        }
+        else {
+            String title = titleWords[0] + " " + titleWords[1] + " " + titleWords[2];
+            chattingRoom.setTitle(title);
+            chattingRoomRepository.save(chattingRoom);
+        }
     }
 
     /**
@@ -113,7 +131,7 @@ public class ChatService {
 
         HttpEntity<ChatRequest> requestEntity = new HttpEntity<>(requestBody, headers);
 
-        String aiServerUrl = "http://localhost:8000/api/chat";
+        String aiServerUrl = "http://host.docker.internal:8000/api/chat";
 
         ResponseEntity<String> response = restTemplate.exchange(
                 aiServerUrl,
