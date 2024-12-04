@@ -6,6 +6,7 @@ import com.dot.osore.core.chat.service.ChatService;
 import com.dot.osore.core.file.service.FileService;
 import com.dot.osore.core.member.entity.Member;
 import com.dot.osore.core.member.service.MemberService;
+import com.dot.osore.core.memo.service.MemoService;
 import com.dot.osore.core.note.dto.NoteRequest;
 import com.dot.osore.core.note.dto.DetailNoteResponse;
 import com.dot.osore.core.note.dto.SimpleNoteResponse;
@@ -79,7 +80,13 @@ public class NoteService {
 
         String avatar = repo.getOwner().getAvatarUrl();
         String description = repo.getDescription();
-        Integer contributorsCount = repo.listContributors().toList().size();
+        Integer contributorsCount;
+        try {
+            contributorsCount = repo.listContributors().withPageSize(1).toList().size();
+        } catch (Exception e) {
+            contributorsCount = 10000;
+        }
+
         Integer starsCount = repo.getStargazersCount();
         Integer forksCount = repo.getForksCount();
 
@@ -96,6 +103,7 @@ public class NoteService {
                 .member(member)
                 .viewedAt(LocalDateTime.now())
                 .build());
+        noteRepository.flush();
         fileService.saveRepositoryFiles(note.url(), note.branch(), savedNote);
         return savedNote.getId();
     }

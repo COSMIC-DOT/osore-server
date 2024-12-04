@@ -33,7 +33,7 @@ public class ChattingRoom {
     private String title;
 
     @Column
-    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "note_id")
@@ -47,10 +47,14 @@ public class ChattingRoom {
     public ChattingRoom(String title, Note note) {
         this.title = title;
         this.note = note;
-        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setUpdatedAt() {
+        this.updatedAt = LocalDateTime.now();
     }
 }

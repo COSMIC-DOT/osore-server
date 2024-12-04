@@ -3,6 +3,7 @@ package com.dot.osore.core.note.controller;
 import com.dot.osore.core.auth.dto.SignInInfo;
 import com.dot.osore.core.auth.handler.Login;
 import com.dot.osore.core.chat.service.ChatService;
+import com.dot.osore.core.memo.service.MemoService;
 import com.dot.osore.core.note.dto.DetailNoteListResponse;
 import com.dot.osore.core.note.dto.NoteRequest;
 import com.dot.osore.core.note.dto.UpdateNoteRequest;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NoteController {
 
     private final NoteService noteService;
+    private final MemoService memoService;
     private final ChatService chatService;
 
     @GetMapping
@@ -62,6 +64,7 @@ public class NoteController {
     public Response saveNote(@RequestBody NoteRequest note, @Login SignInInfo signInInfo) {
         try {
             Long noteId = noteService.saveNote(signInInfo.id(), note);
+            memoService.saveMemo(noteId);
             chatService.createChatRoom(noteId);
             DetailNoteListResponse response = new DetailNoteListResponse(noteService.getNoteList(signInInfo.id()));
             return Response.success(response);
@@ -74,6 +77,7 @@ public class NoteController {
     public Response deleteNote(@PathVariable Long noteId, @Login SignInInfo signInInfo) {
         try {
             chatService.deleteChatRoomByNoteId(noteId);
+            memoService.deleteByNoteId(noteId);
             noteService.deleteNote(noteId);
             DetailNoteListResponse response = new DetailNoteListResponse(noteService.getNoteList(signInInfo.id()));
             return Response.success(response);

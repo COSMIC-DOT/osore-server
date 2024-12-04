@@ -4,7 +4,7 @@ spring:
       - prod
 
 client:
-  url: http://localhost:3000
+  url: https://osore.kr
   github:
     id: ${GITHUB_CLIENT_ID}
     secret: ${GITHUB_CLIENT_SECRET}

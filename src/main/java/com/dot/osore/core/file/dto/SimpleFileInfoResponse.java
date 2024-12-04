@@ -12,7 +12,7 @@ public record SimpleFileInfoResponse(
 
     public SimpleFileInfoResponse findChildByName(String name) {
         for (SimpleFileInfoResponse child : children) {
-            if (child.name.equals(name)) {
+            if (child.name.equals(name) && child.type.equals("folder")) {
                 return child;
             }
         }

@@ -49,9 +49,9 @@ public class MemoController {
     }
 
     @PostMapping
-    public Response saveMemo(@RequestBody CreateMemoRequest createMemoRequest, @Login SignInInfo signInInfo) {
+    public Response createMemo(@RequestBody CreateMemoRequest createMemoRequest, @Login SignInInfo signInInfo) {
         try {
-            memoService.saveMemo(createMemoRequest.noteId(), createMemoRequest.order(), createMemoRequest.content());
+            memoService.saveMemo(createMemoRequest.noteId());
             List<Long> memoList = memoService.getMemoList(createMemoRequest.noteId());
             return Response.success(new MemoListResponse(memoList));
         } catch (Exception e) {
@@ -64,8 +64,7 @@ public class MemoController {
                                @Login SignInInfo signInInfo) {
         try {
             memoService.updateMemo(memoId, updateMemoRequest.content());
-            List<Long> memoList = memoService.getMemoList(updateMemoRequest.noteId());
-            return Response.success(new MemoListResponse(memoList));
+            return Response.success();
         } catch (Exception e) {
             return Response.failure(ErrorCode.MEMBER_NOT_FOUND_EXCEPTION);
         }
