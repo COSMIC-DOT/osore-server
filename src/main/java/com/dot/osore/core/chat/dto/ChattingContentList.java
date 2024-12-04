@@ -16,6 +16,7 @@ public record ChattingContentList(
         return chats.stream()
                 .collect(groupingBy(chat ->chat.getCreatedAt().toLocalDate().format(formatter)))
                 .entrySet().stream()
+                .sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
                 .map(entry -> new ChattingContentList(
                         entry.getKey(),
                         entry.getValue().stream()

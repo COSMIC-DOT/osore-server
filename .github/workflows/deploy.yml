@@ -27,7 +27,7 @@ jobs:
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
 
-      - name: Make .env
+      - name: Make github.env
         run: |
           touch .env
           echo "${{ secrets.ENV }}" > .env
@@ -44,7 +44,7 @@ jobs:
           docker build -t ${{ secrets.DOCKER_REPO }}:latest .
           docker push ${{ secrets.DOCKER_REPO }}:latest
 
-      - name: Save docker-compose.yml & .env to S3
+      - name: Save docker-compose.yml & github.env to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

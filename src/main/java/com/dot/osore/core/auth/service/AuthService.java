@@ -98,7 +98,7 @@ public class AuthService {
                     URLEncoder.encode(googleClientId, "UTF-8"),
                     URLEncoder.encode(googleClientSecret, "UTF-8"),
                     URLEncoder.encode(code, "UTF-8"),
-                    URLEncoder.encode("http://localhost:8080/api/auth/google/callback", "UTF-8"));
+                    URLEncoder.encode("https://osore.kr/api/auth/google/callback", "UTF-8"));
 
             url = new URL("https://oauth2.googleapis.com/token");
         }
@@ -164,7 +164,7 @@ public class AuthService {
                 return String.format("https://github.com/login/oauth/authorize?client_id=%s", githubClientId);
             case GOOGLE:
                 return String.format("https://accounts.google.com/o/oauth2/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=openid%%20email%%20profile",
-                        googleClientId, URLEncoder.encode("http://localhost:8080/api/auth/google/callback", "UTF-8"));
+                        googleClientId, URLEncoder.encode("https://osore.kr/api/auth/google/callback", "UTF-8"));
         }
         throw new Exception();
     }

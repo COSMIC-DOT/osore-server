@@ -21,12 +21,10 @@ public class MemoService {
      * 메모를 생성하는 메서드
      *
      * @param noteId  노트 ID
-     * @param page   메모 순서
-     * @param content 메모 내용
      */
-    public void saveMemo(Long noteId, Long page, String content) {
+    public void saveMemo(Long noteId) {
         Note note = noteService.getNoteById(noteId);
-        memoRepository.save(Memo.builder().page(page).content(content).note(note).build());
+        memoRepository.save(Memo.builder().page(null).content(null).note(note).build());
     }
 
     /**
@@ -69,8 +67,17 @@ public class MemoService {
      * @param noteId 노트 ID
      */
     public List<Long> getMemoList(Long noteId) {
-        List<Memo> memoList = memoRepository.findByNoteId(noteId);
-        memoList.sort(Comparator.comparing(Memo::getPage));
+        List<Memo> memoList = memoRepository.findByNoteIdOrderById(noteId);
         return memoList.stream().map(Memo::getId).toList();
+    }
+
+    /**
+     * 노트 ID로 메모를 삭제하는 메서드
+     *
+     * @param noteId 노트 ID
+     */
+    @Transactional
+    public void deleteByNoteId(Long noteId) {
+        memoRepository.deleteByNoteId(noteId);
     }
 }

@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MemoRepository extends JpaRepository<Memo, Long> {
-    List<Memo> findByNoteId(Long noteId);
+    List<Memo> findByNoteIdOrderById(Long noteId);
+
+    void deleteByNoteId(Long noteId);
 }

@@ -32,6 +32,9 @@ public class ChatService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    private final String AI_SERVER_URL = "http://host.docker.internal:8000/api";
+    private final String NEW_CONVERSATION = "New Conversation";
+
     /**
      * 채팅방을 생성하는 메서드
      *
@@ -40,8 +43,8 @@ public class ChatService {
      */
     public Long createChatRoom(Long noteId) {
         Note note = noteService.getNoteById(noteId);
-        ChattingRoom chatRoom = chattingRoomRepository.save(ChattingRoom.builder().title("Chat").note(note).build());
-        createChatEmbedding(chatRoom.getId(), note.getUrl());
+        ChattingRoom chatRoom = chattingRoomRepository.save(ChattingRoom.builder().title(NEW_CONVERSATION).note(note).build());
+        createChatEmbedding(chatRoom.getId(), note.getUrl(), noteId);
         return chatRoom.getId();
     }
 
@@ -51,15 +54,15 @@ public class ChatService {
      * @param roomId 채팅방 아이디
      * @param url 노트 URL
      */
-    private void createChatEmbedding(Long roomId, String url) {
-        EmbeddingRequest requestBody = new EmbeddingRequest(roomId, url);
+    private void createChatEmbedding(Long roomId, String url, Long noteId) {
+        EmbeddingRequest requestBody = new EmbeddingRequest(roomId, url, noteId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
 
         HttpEntity<EmbeddingRequest> requestEntity = new HttpEntity<>(requestBody, headers);
 
-        String aiServerUrl = "http://host.docker.internal:8000/api/embedding";
+        String aiServerUrl = AI_SERVER_URL + "/embedding";
 
         restTemplate.exchange(
                 aiServerUrl,
@@ -77,7 +80,7 @@ public class ChatService {
      */
     @Transactional
     public List<ChattingRoomResponse> getChattingRoomList(Long noteId) {
-        List<ChattingRoom> chattingRooms = chattingRoomRepository.findByNoteIdOrderByCreatedAtDesc(noteId);
+        List<ChattingRoom> chattingRooms = chattingRoomRepository.findByNoteIdOrderByUpdatedAtDesc(noteId);
         return ChattingRoomResponse.from(chattingRooms);
     }
 
@@ -93,8 +96,9 @@ public class ChatService {
 
         ChattingRoom chattingRoom = chattingRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 채팅방을 찾을 수 없습니다."));
+        chattingRoom.setUpdatedAt();
 
-        if (chattingRoom.getTitle().equals("Chat")) {
+        if (chattingRoom.getTitle().equals(NEW_CONVERSATION)) {
             setNewTitle(chat, chattingRoom);
         }
 
@@ -131,7 +135,7 @@ public class ChatService {
 
         HttpEntity<ChatRequest> requestEntity = new HttpEntity<>(requestBody, headers);
 
-        String aiServerUrl = "http://host.docker.internal:8000/api/chat";
+        String aiServerUrl = AI_SERVER_URL + "/chat";
 
         ResponseEntity<String> response = restTemplate.exchange(
                 aiServerUrl,
@@ -159,7 +163,7 @@ public class ChatService {
      */
     @Transactional
     public void deleteChatRoomByNoteId(Long noteId) {
-        List<ChattingRoom> chattingRooms = chattingRoomRepository.findByNoteIdOrderByCreatedAtDesc(noteId);
+        List<ChattingRoom> chattingRooms = chattingRoomRepository.findByNoteIdOrderByUpdatedAtDesc(noteId);
         chattingRooms.forEach(chattingRoom -> chatRepository.deleteByChattingRoomId(chattingRoom.getId()));
         chattingRoomRepository.deleteByNoteId(noteId);
     }

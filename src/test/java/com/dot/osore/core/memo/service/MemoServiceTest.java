@@ -38,13 +38,11 @@ class MemoServiceTest extends TestContext {
             Note savedNote = noteRepository.save(note);
 
             // when
-            memoService.saveMemo(savedNote.getId(), 1L, "test");
+            memoService.saveMemo(savedNote.getId());
 
             // then
             Memo memo = memoRepository.findById(1L)
                     .orElseThrow(() -> new IllegalArgumentException("해당 메모가 존재하지 않습니다."));
-            assertEquals("test", memo.getContent());
-            assertEquals(1L, memo.getPage());
             assertEquals(savedNote.getId(), memo.getNote().getId());
         }
     }
