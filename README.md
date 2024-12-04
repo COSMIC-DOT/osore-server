@@ -46,14 +46,10 @@
 
 ## 🏛️ 아키텍처
 
-### 서버 아키텍처
+### 서버 및 데이터베이스 아키텍처
 <p align="center">
-  <img width="700" alt="스크린샷 2024-12-04 오후 12 49 39" src="https://github.com/user-attachments/assets/4c340fbb-77d5-4f57-bc6c-8526dc4c07a0">
-</p>
-
-### 데이터베이스 아키텍처
-<p align="center">
-  <img width="700" alt="스크린샷 2024-12-04 오후 12 43 34" src="https://github.com/user-attachments/assets/ea4b759c-7fdb-4c5c-b182-26af79b02270">
+  <img width="40%" alt="스크린샷 2024-12-04 오후 12 49 39" src="https://github.com/user-attachments/assets/4c340fbb-77d5-4f57-bc6c-8526dc4c07a0">
+  <img width="35%" alt="스크린샷 2024-12-04 오후 12 43 34" src="https://github.com/user-attachments/assets/ea4b759c-7fdb-4c5c-b182-26af79b02270">
 </p>
 
 <br>
